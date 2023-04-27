@@ -27,10 +27,12 @@ import {
   personCircleOutline,
 } from "ionicons/icons";
 
-import HomePage2 from "./pages/HomePage2";
+import Races from "./pages/Races";
 import RadioPage from "./pages/RadioPage";
 import LibraryPage from "./pages/LibraryPage";
 import SearchPage from "./pages/SearchPage";
+import ViewRaces from "./pages/races/ViewRacesPage";
+import CreateRace from "./pages/races/CreateRacePage";
 
 setupIonicReact();
 
@@ -51,10 +53,20 @@ const App: React.FC = () => {
               exact
               path="/"
               render={() => {
-                return session ? <Redirect to="/home" /> : <LoginPage />;
+                return session ? <Redirect to="/race" /> : <LoginPage />;
               }}
             />
-            <Route path="/home" render={() => <HomePage2 />} exact={true} />
+            <Route path="/race" render={() => <Races />} exact={true} />
+            <Route
+              path="/race/view"
+              render={() => <ViewRaces />}
+              exact={true}
+            />
+            <Route
+              path="/race/create"
+              render={() => <CreateRace />}
+              exact={true}
+            />
             <Route path="/radio" render={() => <RadioPage />} exact={true} />
             <Route
               path="/library"
@@ -68,7 +80,7 @@ const App: React.FC = () => {
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
+            <IonTabButton tab="home" href="/race">
               <IonIcon icon={playCircle} />
               <IonLabel>Races</IonLabel>
             </IonTabButton>

@@ -1,59 +1,23 @@
 import React from "react";
-import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 import {
+  IonBackButton,
+  IonButtons,
   IonButton,
-  IonInput,
-  IonItem,
-  IonLabel,
-  useIonLoading,
-  useIonToast,
-  useIonRouter,
+  IonHeader,
+  IonContent,
+  IonToolbar,
+  IonTitle,
 } from "@ionic/react";
+import { IonInput, IonItem, IonLabel } from "@ionic/react";
+import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../../supabaseClient";
 
-interface RaceState {
-  name: string;
-}
-
-const HomePage2 = () => {
+const CreateRace = () => {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
-  const [races, setRaces] = useState<RaceState[]>([]);
-  const [race, setRace] = useState({
-    name: "",
-    user_id: session?.user?.id,
-  });
-  useEffect(() => {
-    getRaces();
-  }, [session]);
-  const getRaces = async () => {
-    console.log("getting races");
-    await showLoading();
-    try {
-      const user = supabase.auth.user();
-      let { data, error, status } = await supabase
-        .from("races")
-        .select(`name`)
-        .eq("user_id", user!.id);
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        console.log("Race data");
-        console.log(data);
-        setRaces(data);
-      }
-    } catch (error: any) {
-      showToast({ message: error.message, duration: 5000 });
-    } finally {
-      await hideLoading();
-    }
-  };
-  const createRace = async (e?: any) => {
+  const createRace = async (e, race) => {
     e?.preventDefault();
 
     console.log("creating race");
@@ -66,7 +30,7 @@ const HomePage2 = () => {
 
       const data = {
         ...race,
-        user_id: user!.id,
+        user_id: user.id,
         updated_at: new Date(),
       };
 
@@ -75,20 +39,26 @@ const HomePage2 = () => {
       if (error) {
         throw error;
       }
-    } catch (error: any) {
+    } catch (error) {
       showToast({ message: error.message, duration: 5000 });
     } finally {
       await hideLoading();
     }
   };
+  const [race, setRace] = useState({
+    name: "",
+  });
   return (
     <>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Races</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton></IonBackButton>
+          </IonButtons>
+          <IonTitle>Create Race</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent class="ion-padding">
         <div
           style={{
             display: "flex",
@@ -97,18 +67,8 @@ const HomePage2 = () => {
             height: "100%",
           }}
         >
-          {races.map((r) => {
-            console.log("COOL");
-            console.log(r);
-            return (
-              <IonItem>
-                <IonLabel>
-                  <p>{r?.name}</p>
-                </IonLabel>
-              </IonItem>
-            );
-          })}
-          <form onSubmit={createRace}>
+          <h1>Create Race</h1>
+          <form onSubmit={() => createRace(race)}>
             <IonItem>
               <IonLabel>
                 <p>Race</p>
@@ -139,4 +99,4 @@ const HomePage2 = () => {
   );
 };
 
-export default HomePage2;
+export default CreateRace;

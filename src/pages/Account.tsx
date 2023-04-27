@@ -5,16 +5,15 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonPage,
   IonTitle,
   IonToolbar,
   useIonLoading,
   useIonToast,
-  useIonRouter
-} from '@ionic/react';
-import { useEffect, useState } from 'react';
-import { Avatar } from '../components/Avatar';
-import { supabase } from '../supabaseClient';
+  useIonRouter,
+} from "@ionic/react";
+import { useEffect, useState } from "react";
+import { Avatar } from "../components/Avatar";
+import { supabase } from "../supabaseClient";
 
 export function AccountPage() {
   const [showLoading, hideLoading] = useIonLoading();
@@ -22,22 +21,22 @@ export function AccountPage() {
   const [session] = useState(() => supabase.auth.session());
   const router = useIonRouter();
   const [profile, setProfile] = useState({
-    username: '',
-    website: '',
-    avatar_url: '',
+    username: "",
+    website: "",
+    avatar_url: "",
   });
   useEffect(() => {
     getProfile();
   }, [session]);
   const getProfile = async () => {
-    console.log('get');
+    console.log("get");
     await showLoading();
     try {
       const user = supabase.auth.user();
       let { data, error, status } = await supabase
-        .from('profiles')
+        .from("profiles")
         .select(`username, website, avatar_url`)
-        .eq('id', user!.id)
+        .eq("id", user!.id)
         .single();
 
       if (error && status !== 406) {
@@ -45,6 +44,8 @@ export function AccountPage() {
       }
 
       if (data) {
+        console.log("Profile data");
+        console.log(data);
         setProfile({
           username: data.username,
           website: data.website,
@@ -59,26 +60,32 @@ export function AccountPage() {
   };
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/', 'forward', 'replace');
-  }
-  const updateProfile = async (e?: any, avatar_url: string = '') => {
+    router.push("/", "forward", "replace");
+  };
+  const createRace = async () => {};
+  const updateProfile = async (e?: any, avatar_url: string = "") => {
     e?.preventDefault();
 
-    console.log('update ');
+    console.log("update ");
     await showLoading();
 
     try {
       const user = supabase.auth.user();
+      console.log("USER");
+      console.log(user);
+      console.log("PROFILE");
+      console.log(profile);
 
       const updates = {
         id: user!.id,
         ...profile,
+        username: user?.email,
         avatar_url: avatar_url,
         updated_at: new Date(),
       };
 
-      let { error } = await supabase.from('profiles').upsert(updates, {
-        returning: 'minimal', // Don't return the value after inserting
+      let { error } = await supabase.from("profiles").upsert(updates, {
+        returning: "minimal", // Don't return the value after inserting
       });
 
       if (error) {
@@ -91,7 +98,7 @@ export function AccountPage() {
     }
   };
   return (
-    <IonPage>
+    <>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Account</IonTitle>
@@ -115,7 +122,7 @@ export function AccountPage() {
               name="username"
               value={profile.username}
               onIonChange={(e) =>
-                setProfile({ ...profile, username: e.detail.value ?? '' })
+                setProfile({ ...profile, username: e.detail.value ?? "" })
               }
             ></IonInput>
           </IonItem>
@@ -127,7 +134,7 @@ export function AccountPage() {
               name="website"
               value={profile.website}
               onIonChange={(e) =>
-                setProfile({ ...profile, website: e.detail.value ?? '' })
+                setProfile({ ...profile, website: e.detail.value ?? "" })
               }
             ></IonInput>
           </IonItem>
@@ -144,6 +151,6 @@ export function AccountPage() {
           </IonButton>
         </div>
       </IonContent>
-    </IonPage>
+    </>
   );
 }

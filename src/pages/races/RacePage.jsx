@@ -1,44 +1,50 @@
 import React from "react";
 import {
-  IonList,
+  IonBackButton,
+  IonButtons,
+  IonButton,
   IonHeader,
   IonContent,
   IonToolbar,
   IonTitle,
+  IonRouterLink,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 
-const ViewRaces = () => {
+const Race = ({ match }) => {
+  console.log("MATCH");
+  console.log(match.params);
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
-  const [races, setRaces] = useState([]);
+  const [race, setRace] = useState();
 
   useEffect(() => {
-    getRaces();
+    getRace();
   }, [session]);
-  const getRaces = async () => {
-    console.log("getting races");
+
+  const getRace = async () => {
+    console.log("getting RACE");
     await showLoading();
     try {
       const user = supabase.auth.user();
       let { data, error, status } = await supabase
         .from("races")
         .select()
-        .eq("user_id", user.id);
+        .match({ id: match.params.id })
+        .maybeSingle();
 
       if (error && status !== 406) {
         throw error;
       }
 
       if (data) {
-        console.log("HEELOO");
-        console.log("Race data");
+        console.log("Race data 2");
         console.log(data);
-        setRaces(data);
+        setRace(data);
       }
     } catch (error) {
       showToast({ message: error.message, duration: 5000 });
@@ -50,7 +56,7 @@ const ViewRaces = () => {
     <>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Races</IonTitle>
+          <IonTitle>{race?.name}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -62,21 +68,16 @@ const ViewRaces = () => {
             height: "100%",
           }}
         >
-          <IonList>
-            {races.map((r) => {
-              console.log("COOL");
-              console.log(r);
-              return (
-                <IonItem key={r?.name} routerLink={`/race/view/${r.id}`}>
-                  <IonLabel>{r?.name}</IonLabel>
-                </IonItem>
-              );
-            })}
-          </IonList>
+          <IonRouterLink href={`/race/view/${race?.id}/addEachWay`}>
+            <IonButton>Create Bet</IonButton>
+          </IonRouterLink>
+          <IonRouterLink href={`/race/view/${race?.id}/addHead2Head`}>
+            <IonButton>Create Match Up</IonButton>
+          </IonRouterLink>
         </div>
       </IonContent>
     </>
   );
 };
 
-export default ViewRaces;
+export default Race;

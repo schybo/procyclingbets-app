@@ -26,10 +26,10 @@ const Races = () => {
           }}
         >
           <IonList>
-            <IonItem routerLink="/race/view">
+            <IonItem routerLink="/race/view" routerDirection="forward">
               <IonLabel>View Races</IonLabel>
             </IonItem>
-            <IonItem routerLink="/race/create">
+            <IonItem routerLink="/race/create" routerDirection="forward">
               <IonLabel>Create Race</IonLabel>
             </IonItem>
           </IonList>

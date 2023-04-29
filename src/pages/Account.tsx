@@ -62,7 +62,7 @@ export function AccountPage() {
     await supabase.auth.signOut();
     router.push("/", "forward", "replace");
   };
-  const createRace = async () => {};
+
   const updateProfile = async (e?: any, avatar_url: string = "") => {
     e?.preventDefault();
 

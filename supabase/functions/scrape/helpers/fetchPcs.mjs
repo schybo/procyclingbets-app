@@ -31,26 +31,6 @@ const fetchPcsData = async (gameId) => {
   }
 
   console.log(top3Names);
-  // return axios
-  //   .get(LATEST_RESULTS)
-  //   .then(async ({ data }) => {
-  //     // console.log(data)
-  //     const $ = cheerio.load(data);
-
-  //     //   $(".category_name").each(function () {
-  //     //     categories.push($(this).text());
-  //     //   });
-
-  //     $(".page-content")
-  //       .find("a")
-  //       .each(function (i, link) {
-  //         console.log($(link).attr("href"));
-  //       });
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     console.log("ERROR", gameId);
-  //   });
 };
 
 fetchPcsData();

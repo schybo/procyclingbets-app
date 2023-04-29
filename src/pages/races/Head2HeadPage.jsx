@@ -8,7 +8,7 @@ import {
   IonToolbar,
   IonTitle,
 } from "@ionic/react";
-import { IonInput, IonItem, IonLabel } from "@ionic/react";
+import { IonInput, IonItem, IonLabel, IonToggle } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";

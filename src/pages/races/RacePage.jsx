@@ -71,9 +71,9 @@ const Race = ({ match }) => {
           <IonRouterLink href={`/race/view/${race?.id}/addEachWay`}>
             <IonButton>Create Bet</IonButton>
           </IonRouterLink>
-          <IonRouterLink href={`/race/view/${race?.id}/addHead2Head`}>
+          {/* <IonRouterLink href={`/race/view/${race?.id}/addHead2Head`}>
             <IonButton>Create Match Up</IonButton>
-          </IonRouterLink>
+          </IonRouterLink> */}
         </div>
       </IonContent>
     </>

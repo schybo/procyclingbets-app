@@ -9,7 +9,7 @@ import {
   IonTitle,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
-import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
+import { IonNav, IonToggle, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 
@@ -20,6 +20,12 @@ const EachWay = ({ match }) => {
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
   const [race, setRace] = useState();
+  const [bet, setBet] = useState({
+    rider: "",
+    odds: 0,
+    stake: 0,
+    eachWay: true,
+  });
 
   useEffect(() => {
     getRace();
@@ -51,6 +57,9 @@ const EachWay = ({ match }) => {
       await hideLoading();
     }
   };
+
+  const createBet = async (e, race) => {};
+
   return (
     <>
       <IonHeader>
@@ -67,11 +76,60 @@ const EachWay = ({ match }) => {
             height: "100%",
           }}
         >
-          <IonItem>
-            <IonLabel>
-              <p>{race?.name}</p>
-            </IonLabel>
-          </IonItem>
+          <h1>{`Create Bet for ${race?.name}`}</h1>
+          <form onSubmit={() => createBet(bet)}>
+            <IonItem>
+              <IonLabel>
+                <p>Bet</p>
+              </IonLabel>
+            </IonItem>
+
+            <IonItem>
+              <IonLabel position="stacked">Rider</IonLabel>
+              <IonInput
+                type="text"
+                name="rider"
+                value={bet.rider}
+                onIonChange={(e) =>
+                  setRace({ ...race, rider: e.detail.value ?? "" })
+                }
+              ></IonInput>
+            </IonItem>
+
+            <IonItem>
+              <IonLabel position="stacked">Odds</IonLabel>
+              <IonInput
+                type="text"
+                name="odds"
+                value={bet.odds}
+                onIonChange={(e) =>
+                  setRace({ ...race, odds: e.detail.value ?? 0 })
+                }
+              ></IonInput>
+            </IonItem>
+
+            <IonItem>
+              <IonLabel position="stacked">Stake</IonLabel>
+              <IonInput
+                type="text"
+                name="stake"
+                value={bet.stake}
+                onIonChange={(e) =>
+                  setRace({ ...race, stake: e.detail.value ?? 0 })
+                }
+              ></IonInput>
+            </IonItem>
+
+            <IonItem>
+              <IonToggle checked={bet.eachWay}>Each Way?</IonToggle>
+            </IonItem>
+
+            <div className="ion-text-center">
+              <IonButton fill="clear" type="submit">
+                Create Bet
+              </IonButton>
+            </div>
+          </form>
         </div>
       </IonContent>
     </>

@@ -1,3 +1,5 @@
+// Run with node --experimental-modules supabase/functions/scrape/helpers/fetchPcs.mjs
+
 import cheerio from "cheerio";
 import axios from "axios";
 

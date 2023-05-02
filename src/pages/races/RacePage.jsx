@@ -21,9 +21,11 @@ const Race = ({ match }) => {
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
   const [race, setRace] = useState();
+  const [eachWayBets, setEachWayBets] = useState([]);
 
   useEffect(() => {
     getRace();
+    getEachWayBets();
   }, [session]);
 
   const getRace = async () => {
@@ -52,6 +54,32 @@ const Race = ({ match }) => {
       await hideLoading();
     }
   };
+
+  const getEachWayBets = async () => {
+    console.log("getting Bets for races");
+    await showLoading();
+    try {
+      const user = supabase.auth.user();
+      let { data, error, status } = await supabase
+        .from("eachWays")
+        .select()
+        .match({ race_id: match.params.id });
+
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        console.log("Bets");
+        console.log(data);
+        setEachWayBets(data);
+      }
+    } catch (error) {
+      showToast({ message: error.message, duration: 5000 });
+    } finally {
+      await hideLoading();
+    }
+  };
   return (
     <>
       <IonHeader>
@@ -71,6 +99,15 @@ const Race = ({ match }) => {
           <IonRouterLink href={`/race/view/${race?.id}/addEachWay`}>
             <IonButton>Create Bet</IonButton>
           </IonRouterLink>
+          {eachWayBets.map((ew) => {
+            console.log("COOL");
+            console.log(ew);
+            return (
+              <IonItem key={ew?.rider}>
+                <IonLabel>{ew?.rider}</IonLabel>
+              </IonItem>
+            );
+          })}
           {/* <IonRouterLink href={`/race/view/${race?.id}/addHead2Head`}>
             <IonButton>Create Match Up</IonButton>
           </IonRouterLink> */}

@@ -10,6 +10,7 @@ const url = "https://www.procyclingstats.com/rankings.php";
 axios
   .get(url)
   .then((response) => {
+    console.log(response);
     // Load the HTML into Cheerio
     const $ = cheerio.load(response.data);
 

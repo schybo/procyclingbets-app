@@ -4,8 +4,11 @@ import axios from "axios";
 import cheerio from "cheerio";
 import { createCanvas, loadImage } from "canvas";
 
+// Solved with
+// www.npmjs.com/package/crawlee
+
 // Function to convert canvas to base64
-function canvasToBase64(canvas) {
+https: function canvasToBase64(canvas) {
   return canvas.toDataURL().split(",")[1];
 }
 

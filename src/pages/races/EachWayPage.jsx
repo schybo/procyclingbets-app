@@ -8,12 +8,15 @@ import {
   IonContent,
   IonToolbar,
   IonTitle,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { useIonRouter } from "@ionic/react";
 import { IonNav, IonToggle, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import { capitalizeFirstLetter } from "../../helpers/helpers";
 
 const EachWay = ({ match }) => {
   console.log("MATCH");
@@ -23,6 +26,7 @@ const EachWay = ({ match }) => {
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
   const [race, setRace] = useState();
+  const [betTypes, setTypes] = useState([]);
   const [bet, setBet] = useState({
     rider_name: "",
     rider_odds: null,
@@ -33,33 +37,57 @@ const EachWay = ({ match }) => {
   });
 
   useEffect(() => {
-    getRace();
+    getData();
   }, [session]);
 
-  const getRace = async () => {
-    console.log("getting RACE");
+  const getData = async () => {
     await showLoading();
     try {
-      const user = supabase.auth.user();
-      let { data, error, status } = await supabase
-        .from("races")
-        .select()
-        .match({ id: match.params.id })
-        .maybeSingle();
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        console.log("Race data 2");
-        console.log(data);
-        setRace(data);
-      }
+      await getRace();
+      await getEachWayTypeOptions();
     } catch (error) {
       showToast({ message: error.message, duration: 5000 });
     } finally {
+      console.log("Hide loading");
       await hideLoading();
+    }
+  };
+
+  const getRace = async () => {
+    console.log("Getting RACE");
+
+    const user = supabase.auth.user();
+    let { data, error, status } = await supabase
+      .from("races")
+      .select()
+      .match({ id: match.params.id })
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    if (data) {
+      console.log("Race data 2");
+      console.log(data);
+      setRace(data);
+    }
+  };
+
+  const getEachWayTypeOptions = async () => {
+    console.log("Getting RACE");
+
+    let { data, error, status } = await supabase.from("eachWayType").select();
+
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    if (data) {
+      console.log("Types");
+      console.log(data);
+      setTypes(data);
     }
   };
 
@@ -67,6 +95,7 @@ const EachWay = ({ match }) => {
     e?.preventDefault();
 
     console.log("creating bet");
+    console.log(bet);
     await showLoading();
 
     try {
@@ -81,9 +110,11 @@ const EachWay = ({ match }) => {
         updated_at: new Date(),
       };
 
+      console.log(data);
       let { error } = await supabase.from("eachWays").insert(data);
 
       if (error) {
+        console.log("ERROR");
         console.log(error);
         throw error;
       }
@@ -115,7 +146,7 @@ const EachWay = ({ match }) => {
             <IonItem>
               <h1>{`Create Bet for ${race?.name}`}</h1>
             </IonItem>
-            <form onSubmit={() => createBet(bet)}>
+            <form onSubmit={(e) => createBet(e, bet)}>
               <IonItem>
                 <IonLabel>
                   <p>Bet</p>
@@ -191,6 +222,21 @@ const EachWay = ({ match }) => {
               </IonItem>
 
               <IonItem>
+                <IonSelect label="Type" placeholder="Overall">
+                  {betTypes.map((bt) => {
+                    console.log("bt");
+                    console.log(bt);
+                    return (
+                      <IonSelectOption key={bt?.id} value={bt?.type}>
+                        {capitalizeFirstLetter(bt?.type)}
+                      </IonSelectOption>
+                    );
+                  })}
+                </IonSelect>
+              </IonItem>
+
+              <IonItem>
+                <IonLabel position="stacked">Is Each Way?</IonLabel>
                 <IonToggle checked={bet.each_way}>Each Way?</IonToggle>
               </IonItem>
 

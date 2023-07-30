@@ -11,17 +11,22 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    const { session, error } = supabase.auth.session();
+    async function getSession() {
+      console.log("SUPABASE AUTH");
+      console.log(supabase.auth);
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    setUser(session?.user ?? null);
-    const { subscription } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      const {
+        data: { subscription },
+      } = await supabase.auth.onAuthStateChange((_event, session) => {
         setUser(session?.user ?? null);
-      }
-    );
-    return () => {
-      subscription?.unsubscribe();
-    };
+      });
+
+      return () => subscription.unsubscribe();
+    }
+    getSession();
   }, []);
 
   const value = {

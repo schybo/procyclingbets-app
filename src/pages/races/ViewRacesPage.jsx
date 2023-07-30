@@ -5,11 +5,13 @@ import {
   IonContent,
   IonToolbar,
   IonTitle,
+  IonButton,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import { race } from "q";
 
 const ViewRaces = () => {
   const [showLoading, hideLoading] = useIonLoading();
@@ -20,6 +22,7 @@ const ViewRaces = () => {
   useEffect(() => {
     getRaces();
   }, [session]);
+
   const getRaces = async () => {
     console.log("getting races");
     await showLoading();
@@ -46,6 +49,28 @@ const ViewRaces = () => {
       await hideLoading();
     }
   };
+
+  const deleteRace = async (raceId) => {
+    await showLoading();
+    try {
+      let { error, status } = await supabase
+        .from("races")
+        .delete()
+        .eq("id", raceId);
+
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      // Refresh the list of races
+      await getRaces();
+    } catch (error) {
+      showToast({ message: error.message, duration: 5000 });
+    } finally {
+      await hideLoading();
+    }
+  };
+
   return (
     <>
       <IonHeader>
@@ -60,6 +85,7 @@ const ViewRaces = () => {
             alignItems: "center",
             justifyContent: "center",
             height: "100%",
+            width: "100%",
           }}
         >
           <IonList>
@@ -67,8 +93,18 @@ const ViewRaces = () => {
               console.log("COOL");
               console.log(r);
               return (
-                <IonItem key={r?.name} routerLink={`/race/view/${r.id}`}>
+                <IonItem key={r?.name}>
                   <IonLabel>{r?.name}</IonLabel>
+                  <IonButton size="small" routerLink={`/race/view/${r.id}`}>
+                    View
+                  </IonButton>
+                  <IonButton
+                    onClick={() => deleteRace(r?.id)}
+                    size="small"
+                    color="danger"
+                  >
+                    Delete
+                  </IonButton>
                 </IonItem>
               );
             })}

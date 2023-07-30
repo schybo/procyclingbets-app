@@ -9,11 +9,13 @@ import {
   IonTitle,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
+import { useIonRouter } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 
 const CreateRace = () => {
+  const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
@@ -22,27 +24,38 @@ const CreateRace = () => {
 
     console.log("creating race");
     await showLoading();
-
+    let createdRace = null;
     try {
       const user = supabase.auth.user();
       console.log("USER");
       console.log(user);
-
-      const data = {
+      const dataToCreate = {
         ...race,
         user_id: user.id,
         updated_at: new Date(),
       };
-
-      let { error } = await supabase.from("races").insert(data);
+      let { data, error } = await supabase
+        .from("races")
+        .upsert(dataToCreate)
+        .select()
+        .maybeSingle();
 
       if (error) {
         throw error;
       }
+
+      console.log("Returned data");
+      console.log(data);
+      createdRace = data;
     } catch (error) {
       showToast({ message: error.message, duration: 5000 });
     } finally {
       await hideLoading();
+      router.push(
+        createdRace ? `/race/view/${createdRace.id}` : `/race`,
+        "root",
+        "replace"
+      );
     }
   };
   const [race, setRace] = useState({
@@ -68,7 +81,7 @@ const CreateRace = () => {
           }}
         >
           <h1>Create Race</h1>
-          <form onSubmit={() => createRace(race)}>
+          <form onSubmit={(e) => createRace(e, race)}>
             <IonItem>
               <IonLabel>
                 <p>Race</p>

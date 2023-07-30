@@ -11,6 +11,13 @@ import {
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+} from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 
@@ -24,60 +31,61 @@ const Race = ({ match }) => {
   const [eachWayBets, setEachWayBets] = useState([]);
 
   useEffect(() => {
-    getRace();
-    getEachWayBets();
+    getRaceAndBets();
   }, [session]);
 
-  const getRace = async () => {
-    console.log("getting RACE");
+  const getRaceAndBets = async () => {
     await showLoading();
     try {
-      const user = supabase.auth.user();
-      let { data, error, status } = await supabase
-        .from("races")
-        .select()
-        .match({ id: match.params.id })
-        .maybeSingle();
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        console.log("Race data 2");
-        console.log(data);
-        setRace(data);
-      }
+      await getRace();
+      await getEachWayBets();
     } catch (error) {
       showToast({ message: error.message, duration: 5000 });
     } finally {
+      console.log("Hide loading");
       await hideLoading();
     }
   };
 
+  const getRace = async () => {
+    console.log("Getting RACE");
+
+    const user = supabase.auth.user();
+    let { data, error, status } = await supabase
+      .from("races")
+      .select()
+      .match({ id: match.params.id })
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    if (data) {
+      console.log("Race data 2");
+      console.log(data);
+      setRace(data);
+    }
+  };
+
   const getEachWayBets = async () => {
-    console.log("getting Bets for races");
-    await showLoading();
-    try {
-      const user = supabase.auth.user();
-      let { data, error, status } = await supabase
-        .from("eachWays")
-        .select()
-        .match({ race_id: match.params.id });
+    console.log("Getting Bets for races");
+    const user = supabase.auth.user();
+    let { data, error, status } = await supabase
+      .from("eachWays")
+      .select()
+      .match({ race_id: match.params.id })
+      .eq("user_id", user.id);
 
-      if (error && status !== 406) {
-        throw error;
-      }
+    if (error && status !== 406) {
+      throw error;
+    }
 
-      if (data) {
-        console.log("Bets");
-        console.log(data);
-        setEachWayBets(data);
-      }
-    } catch (error) {
-      showToast({ message: error.message, duration: 5000 });
-    } finally {
-      await hideLoading();
+    if (data) {
+      console.log("Bets");
+      console.log(data);
+      setEachWayBets(data);
     }
   };
   return (
@@ -93,18 +101,34 @@ const Race = ({ match }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "100%",
+            height: "10%",
           }}
         >
           <IonRouterLink href={`/race/view/${race?.id}/addEachWay`}>
             <IonButton>Create Bet</IonButton>
           </IonRouterLink>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "90%",
+          }}
+        >
           {eachWayBets.map((ew) => {
             console.log("COOL");
             console.log(ew);
             return (
-              <IonItem key={ew?.rider}>
-                <IonLabel>{ew?.rider}</IonLabel>
+              <IonItem key={`bet-${ew?.id}`}>
+                <IonCard>
+                  <IonCardHeader>
+                    <IonCardTitle>{ew?.rider_name}</IonCardTitle>
+                    <IonCardSubtitle>{ew?.rider_odds}</IonCardSubtitle>
+                  </IonCardHeader>
+
+                  <IonCardContent>{`Stake: ${ew?.amount}`}</IonCardContent>
+                </IonCard>
               </IonItem>
             );
           })}

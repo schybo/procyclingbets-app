@@ -8,6 +8,9 @@ import {
   IonToolbar,
   IonTitle,
   IonRouterLink,
+  IonText,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
@@ -20,6 +23,10 @@ import {
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import {
+  capitalizeFirstLetter,
+  currencyFormatter,
+} from "../../helpers/helpers";
 
 const Race = ({ match }) => {
   console.log("MATCH");
@@ -28,6 +35,7 @@ const Race = ({ match }) => {
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
   const [race, setRace] = useState();
+  const [betStatus, setStatus] = useState([]);
   const [eachWayBets, setEachWayBets] = useState([]);
 
   useEffect(() => {
@@ -39,6 +47,7 @@ const Race = ({ match }) => {
     try {
       await getRace();
       await getEachWayBets();
+      await getBetStatusOptions();
     } catch (error) {
       showToast({ message: error.message, duration: 5000 });
     } finally {
@@ -88,6 +97,70 @@ const Race = ({ match }) => {
       setEachWayBets(data);
     }
   };
+
+  const getBetStatusOptions = async () => {
+    console.log("Getting STatus");
+
+    let { data, error, status } = await supabase.from("betStatus").select();
+
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    if (data) {
+      console.log("Statii");
+      console.log(data);
+      setStatus(data);
+    }
+  };
+
+  const setBetStatus = async (bet, s) => {
+    await showLoading();
+    try {
+      console.log("BET");
+      console.log(bet);
+      console.log("Status");
+      console.log(s);
+
+      const { error, status } = await supabase
+        .from("eachWays")
+        .update({ status: s })
+        .eq("id", bet.id);
+
+      if (error && status !== 406) {
+        throw error;
+      }
+    } catch (error) {
+      showToast({ message: error.message, duration: 5000 });
+    } finally {
+      await hideLoading();
+    }
+  };
+
+  const deleteBet = async (betId) => {
+    await showLoading();
+    try {
+      let { error, status } = await supabase
+        .from("eachWays")
+        .delete()
+        .eq("id", betId);
+
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      // Refresh the list of bets
+      await getEachWayBets();
+    } catch (error) {
+      showToast({ message: error.message, duration: 5000 });
+    } finally {
+      await hideLoading();
+    }
+  };
+
+  let total = eachWayBets.reduce((acc, cv) => acc + cv?.amount, 0);
+  total = currencyFormatter.format(total);
+
   return (
     <>
       <IonHeader>
@@ -96,6 +169,18 @@ const Race = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "10%",
+          }}
+        >
+          <IonText>
+            <h1>Total Bet: {total}</h1>
+          </IonText>
+        </div>
         <div
           style={{
             display: "flex",
@@ -113,21 +198,57 @@ const Race = ({ match }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "90%",
           }}
         >
           {eachWayBets.map((ew) => {
             console.log("COOL");
             console.log(ew);
             return (
-              <IonItem key={`bet-${ew?.id}`}>
-                <IonCard>
+              <IonItem
+                key={`bet-${ew?.id}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <IonCard
+                  color="light"
+                  style={{
+                    width: "100%",
+                  }}
+                >
                   <IonCardHeader>
                     <IonCardTitle>{ew?.rider_name}</IonCardTitle>
                     <IonCardSubtitle>{ew?.rider_odds}</IonCardSubtitle>
                   </IonCardHeader>
 
                   <IonCardContent>{`Stake: ${ew?.amount}`}</IonCardContent>
+                  <IonButton
+                    size="small"
+                    color="danger"
+                    onClick={() => deleteBet(ew?.id)}
+                  >
+                    Delete
+                  </IonButton>
+                  {ew.status && (
+                    <IonSelect
+                      label="Status"
+                      value={ew.status}
+                      onIonChange={(e) => setBetStatus(ew, e.detail.value)}
+                    >
+                      {betStatus.map((bs) => {
+                        console.log("bt");
+                        console.log(bs);
+                        return (
+                          <IonSelectOption key={bs?.id} value={bs?.id}>
+                            {capitalizeFirstLetter(bs?.status)}
+                          </IonSelectOption>
+                        );
+                      })}
+                    </IonSelect>
+                  )}
                 </IonCard>
               </IonItem>
             );

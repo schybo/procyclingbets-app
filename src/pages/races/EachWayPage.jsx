@@ -222,12 +222,18 @@ const EachWay = ({ match }) => {
               </IonItem>
 
               <IonItem>
-                <IonSelect label="Type" placeholder="Overall">
+                <IonSelect
+                  label="Type"
+                  placeholder="Overall"
+                  onIonChange={(e) =>
+                    setBet({ ...bet, type: e.detail.value ?? 0 })
+                  }
+                >
                   {betTypes.map((bt) => {
                     console.log("bt");
                     console.log(bt);
                     return (
-                      <IonSelectOption key={bt?.id} value={bt?.type}>
+                      <IonSelectOption key={bt?.id} value={bt?.id}>
                         {capitalizeFirstLetter(bt?.type)}
                       </IonSelectOption>
                     );

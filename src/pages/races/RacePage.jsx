@@ -26,6 +26,7 @@ import { supabase } from "../../supabaseClient";
 import {
   capitalizeFirstLetter,
   currencyFormatter,
+  BET_STATUS,
 } from "../../helpers/helpers";
 
 const Race = ({ match }) => {
@@ -36,6 +37,9 @@ const Race = ({ match }) => {
   const [session] = useState(() => supabase.auth.session());
   const [race, setRace] = useState();
   const [betStatus, setStatus] = useState([]);
+  const [totalWon, setTotalWon] = useState();
+  const [totalLost, setTotalLost] = useState();
+  const [totalOpen, setTotalOpen] = useState();
   const [eachWayBets, setEachWayBets] = useState([]);
 
   useEffect(() => {
@@ -91,10 +95,29 @@ const Race = ({ match }) => {
       throw error;
     }
 
+    let totalWon = 0;
+    let totalLost = 0;
+    let totalOpen = 0;
     if (data) {
       console.log("Bets");
       console.log(data);
       setEachWayBets(data);
+      data.map((ew) => {
+        if (ew.status === BET_STATUS["won"]) {
+          totalWon += ew.amount * ew.rider_odds;
+        } else if (ew.status === BET_STATUS["lost"]) {
+          totalLost += ew.amount;
+        } else if (ew.status === BET_STATUS["placed"]) {
+          totalWon += ew.amount * (ew.rider_odds * ew.each_way_return);
+        } else if (ew.status === BET_STATUS["void"]) {
+          totalWon += ew.amount;
+        } else {
+          totalOpen += ew.amount;
+        }
+      });
+      setTotalOpen(totalOpen);
+      setTotalWon(totalWon);
+      setTotalLost(totalLost);
     }
   };
 
@@ -174,11 +197,14 @@ const Race = ({ match }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "10%",
+            height: "30%",
           }}
         >
           <IonText>
             <h1>Total Bet: {total}</h1>
+            <h2>Total Won: {totalWon}</h2>
+            <h2>Total Lost: {totalLost}</h2>
+            <h2>Total Open: {totalOpen}</h2>
           </IonText>
         </div>
         <div

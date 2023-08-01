@@ -195,7 +195,7 @@ const EachWay = ({ match }) => {
                 ></IonInput>
               </IonItem>
 
-              <IonItem>
+              {/* <IonItem>
                 <IonLabel position="stacked">Positions</IonLabel>
                 <IonInput
                   type="text"
@@ -206,10 +206,10 @@ const EachWay = ({ match }) => {
                     setBet({ ...bet, each_way_positions: e.detail.value ?? 0 })
                   }
                 ></IonInput>
-              </IonItem>
+              </IonItem> */}
 
               <IonItem>
-                <IonLabel position="stacked">Return</IonLabel>
+                <IonLabel position="stacked">Each Way Return</IonLabel>
                 <IonInput
                   type="text"
                   name="each_way_return"
@@ -222,6 +222,7 @@ const EachWay = ({ match }) => {
               </IonItem>
 
               <IonItem>
+                <IonLabel position="stacked">Type</IonLabel>
                 <IonSelect
                   label="Type"
                   placeholder="Overall"

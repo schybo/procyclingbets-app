@@ -14,6 +14,7 @@ import "@ionic/react/css/ionic.bundle.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import "./theme/tailwind.css";
 import { LoginPage } from "./pages/Login";
 import { AccountPage } from "./pages/Account";
 import { useEffect, useState } from "react";

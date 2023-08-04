@@ -81,6 +81,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@capacitor/cli": "3.4.3",
     "esm": "^3.2.25"
   },

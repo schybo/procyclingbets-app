@@ -29,7 +29,7 @@ import {
 } from "ionicons/icons";
 
 import Races from "./pages/Races";
-import RadioPage from "./pages/RadioPage";
+import DashboardPage from "./pages/DashboardPage";
 import LibraryPage from "./pages/LibraryPage";
 import SearchPage from "./pages/SearchPage";
 import ViewRaces from "./pages/races/ViewRacesPage";
@@ -74,7 +74,11 @@ const App: React.FC = () => {
             <Route path="/race/view/:id" component={Race} />
             <Route path="/race/view/:id/addEachWay" component={EachWay} />
             <Route path="/race/view/:id/addHead2Head" component={Head2Head} />
-            <Route path="/radio" render={() => <RadioPage />} exact={true} />
+            <Route
+              path="/dashboard"
+              render={() => <DashboardPage />}
+              exact={true}
+            />
             <Route
               path="/library"
               render={() => <LibraryPage />}
@@ -92,19 +96,14 @@ const App: React.FC = () => {
               <IonLabel>Races</IonLabel>
             </IonTabButton>
 
-            <IonTabButton tab="radio" href="/radio">
+            <IonTabButton tab="dashboard" href="/dashboard">
               <IonIcon icon={radio} />
-              <IonLabel>Radio</IonLabel>
+              <IonLabel>Dashboard</IonLabel>
             </IonTabButton>
 
             <IonTabButton tab="library" href="/library">
               <IonIcon icon={library} />
               <IonLabel>Library</IonLabel>
-            </IonTabButton>
-
-            <IonTabButton tab="search" href="/search">
-              <IonIcon icon={search} />
-              <IonLabel>Search</IonLabel>
             </IonTabButton>
 
             <IonTabButton tab="account" href="/account">

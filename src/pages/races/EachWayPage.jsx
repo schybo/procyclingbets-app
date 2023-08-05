@@ -34,6 +34,8 @@ const EachWay = ({ match }) => {
     each_way: true,
     each_way_return: 0.25,
     each_way_positions: 3,
+    status: 5,
+    type: 1,
   });
 
   useEffect(() => {
@@ -226,6 +228,7 @@ const EachWay = ({ match }) => {
                 <IonSelect
                   label="Type"
                   placeholder="Overall"
+                  value={bet?.type}
                   onIonChange={(e) =>
                     setBet({ ...bet, type: e.detail.value ?? 0 })
                   }

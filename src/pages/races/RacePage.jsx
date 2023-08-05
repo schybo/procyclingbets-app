@@ -184,65 +184,75 @@ const Race = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "30%",
-          }}
-        >
+        <div className="flex items-center flex-row flex-wrap justify-center mt-12 mb-8 text-center">
           <IonText>
-            <h1>Total Bet: {currencyFormatter.format(total)}</h1>
-            <h2>Total Won: {currencyFormatter.format(totalWon)}</h2>
-            <h2>Total Lost: {currencyFormatter.format(totalLost)}</h2>
-            <h2>Total Open: {currencyFormatter.format(totalOpen)}</h2>
+            <h1 className="text-xl font-bold mb-2">
+              Total Bet: {currencyFormatter.format(total)}
+            </h1>
+            <h2 className="text-lg mt-2">
+              Total Won: {currencyFormatter.format(totalWon)}
+            </h2>
+            <h2 className="text-lg mt-0.5">
+              Total Lost: {currencyFormatter.format(totalLost)}
+            </h2>
+            <h2 className="text-lg mt-0.5">
+              Total Open: {currencyFormatter.format(totalOpen)}
+            </h2>
           </IonText>
         </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {eachWayBets.map((ew) => {
             console.log("COOL");
             console.log(ew);
             return (
-              <IonItem
+              <IonCard
+                color="light"
                 key={`bet-${ew?.id}`}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
+                className="w-full md:w-64 mx-6 flex flex-row items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
-                <IonCard
-                  color="light"
-                  style={{
-                    width: "100%",
-                  }}
+                {/* TODO: Placeholder */}
+                <object
+                  data="https://stackoverflow.com/does-not-exist.png"
+                  type="image/png"
+                  className="w-36"
                 >
-                  {/* TODO: Placeholder */}
                   <img
+                    className="w-36 rounded-t-lg h-auto md:w-48 md:rounded-none md:rounded-l-lg"
                     src={`https://www.procyclingstats.com/images/riders/bp/aa/${kebabCase(
                       ew?.rider_name
                     )}-${new Date().getFullYear()}.jpeg`}
+                    alt=""
                   ></img>
-                  <IonCardHeader>
-                    <IonCardTitle>{ew?.rider_name}</IonCardTitle>
-                    <IonCardSubtitle>Odds: {ew?.rider_odds}</IonCardSubtitle>
-                  </IonCardHeader>
+                </object>
+                <div className="flex flex-col justify-between p-4 leading-normal w-full">
+                  <div className="text-lg font-bold">{ew?.rider_name}</div>
+                  <div>Odds: {ew?.rider_odds?.toFixed(2)}</div>
 
-                  <IonCardContent>{`Stake: ${currencyFormatter.format(
+                  <div>{`Stake: ${currencyFormatter.format(
                     ew?.amount * (ew?.each_way ? 2 : 1)
-                  )}`}</IonCardContent>
+                  )}`}</div>
+                  <div className="flex flex-row justify-start items-center mt-2">
+                    <label className="mb-2 mr-4">Status:</label>
+                    <IonSelect
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-1 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                      value={ew.status}
+                      onIonChange={(e) => setBetStatus(ew, e.detail.value)}
+                    >
+                      {betStatus.map((bs) => {
+                        console.log("bt");
+                        console.log(bs);
+                        return (
+                          <IonSelectOption key={bs?.id} value={bs?.id}>
+                            {capitalizeFirstLetter(bs?.status)}
+                          </IonSelectOption>
+                        );
+                      })}
+                    </IonSelect>
+                  </div>
                   <button
                     type="button"
                     onClick={() => deleteBet(ew?.id)}
-                    className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                    className="text-white w-24 bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-1 text-center mr-2 mb-2 mt-2"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -260,25 +270,8 @@ const Race = ({ match }) => {
                     </svg>
                     Delete
                   </button>
-                  {ew.status && (
-                    <IonSelect
-                      label="Status"
-                      value={ew.status}
-                      onIonChange={(e) => setBetStatus(ew, e.detail.value)}
-                    >
-                      {betStatus.map((bs) => {
-                        console.log("bt");
-                        console.log(bs);
-                        return (
-                          <IonSelectOption key={bs?.id} value={bs?.id}>
-                            {capitalizeFirstLetter(bs?.status)}
-                          </IonSelectOption>
-                        );
-                      })}
-                    </IonSelect>
-                  )}
-                </IonCard>
-              </IonItem>
+                </div>
+              </IonCard>
             );
           })}
           {/* <IonRouterLink href={`/race/view/${race?.id}/addHead2Head`}>

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.procyclingbets.app;
 
 import com.getcapacitor.BridgeActivity;
 

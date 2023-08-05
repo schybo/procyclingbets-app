@@ -17,3 +17,73 @@ export const BET_STATUS = {
   won: 3,
   lost: 4,
 };
+
+export const BET_TYPE = {
+  overall: 1,
+  stage: 2,
+  kom: 3,
+  points: 4,
+  matchup: 5,
+};
+
+export const kebabCase = (string) =>
+  string
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .replace(/[\s_]+/g, "-")
+    .toLowerCase();
+
+export const calculateWinnings = (bets) => {
+  let tw = {};
+  let to = {};
+  let tl = {};
+  let t = {};
+
+  // Set default object
+  bets.map((bet) => {
+    t[bet.race_id] = 0;
+    tw[bet.race_id] = 0;
+    to[bet.race_id] = 0;
+    tl[bet.race_id] = 0;
+  });
+
+  bets.map((bet) => {
+    t[bet.race_id] += bet.amount;
+    if (bet.each_way) {
+      t[bet.race_id] += bet.amount;
+    }
+
+    if (bet.status === BET_STATUS["won"]) {
+      if (bet.type != BET_TYPE["matchup"]) {
+        tw[bet.race_id] += bet.amount * bet.rider_odds;
+      }
+      if (bet.each_way) {
+        tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
+      }
+    } else if (bet.status === BET_STATUS["lost"]) {
+      tl[bet.race_id] += bet.amount * (bet.type.each_way ? 2 : 1);
+    } else if (bet.status === BET_STATUS["placed"]) {
+      // Assuming this is an each way bet
+      tl[bet.race_id] += bet.amount;
+      tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
+    } else if (bet.status === BET_STATUS["void"]) {
+      tw[bet.race_id] += bet.amount;
+      if (bet.type.each_way) {
+        tw[bet.race_id] += bet.amount;
+      }
+    } else {
+      console.log("REACHED HERE");
+      console.log(bet);
+      to[bet.race_id] += bet.amount;
+      if (bet.each_way) {
+        to[bet.race_id] += bet.amount;
+      }
+    }
+  });
+
+  return {
+    won: tw,
+    lost: tl,
+    open: to,
+    total: t,
+  };
+};

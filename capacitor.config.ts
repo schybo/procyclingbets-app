@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'supabase-ionic-react',
+  appId: 'com.procyclingbets.app',
+  appName: 'Pro Cycling Bets',
   webDir: 'build',
   bundledWebRuntime: false
 };

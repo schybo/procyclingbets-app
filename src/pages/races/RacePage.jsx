@@ -11,6 +11,7 @@ import {
   IonText,
   IonSelect,
   IonSelectOption,
+  useIonRouter,
 } from "@ionic/react";
 import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
@@ -27,16 +28,22 @@ import {
   capitalizeFirstLetter,
   currencyFormatter,
   BET_STATUS,
+  calculateWinnings,
+  kebabCase,
 } from "../../helpers/helpers";
+import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
+import { add } from "ionicons/icons";
 
 const Race = ({ match }) => {
   console.log("MATCH");
   console.log(match.params);
+  const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
   const [race, setRace] = useState();
   const [betStatus, setStatus] = useState([]);
+  const [total, setTotal] = useState();
   const [totalWon, setTotalWon] = useState();
   const [totalLost, setTotalLost] = useState();
   const [totalOpen, setTotalOpen] = useState();
@@ -95,29 +102,17 @@ const Race = ({ match }) => {
       throw error;
     }
 
-    let totalWon = 0;
-    let totalLost = 0;
-    let totalOpen = 0;
     if (data) {
       console.log("Bets");
       console.log(data);
       setEachWayBets(data);
-      data.map((ew) => {
-        if (ew.status === BET_STATUS["won"]) {
-          totalWon += ew.amount * ew.rider_odds;
-        } else if (ew.status === BET_STATUS["lost"]) {
-          totalLost += ew.amount;
-        } else if (ew.status === BET_STATUS["placed"]) {
-          totalWon += ew.amount * (ew.rider_odds * ew.each_way_return);
-        } else if (ew.status === BET_STATUS["void"]) {
-          totalWon += ew.amount;
-        } else {
-          totalOpen += ew.amount;
-        }
-      });
-      setTotalOpen(totalOpen);
-      setTotalWon(totalWon);
-      setTotalLost(totalLost);
+      let result = calculateWinnings(data);
+      console.log("WINNINGS");
+      console.log(result);
+      setTotal(result["total"][match.params.id]);
+      setTotalOpen(result["open"][match.params.id]);
+      setTotalWon(result["won"][match.params.id]);
+      setTotalLost(result["lost"][match.params.id]);
     }
   };
 
@@ -181,9 +176,6 @@ const Race = ({ match }) => {
     }
   };
 
-  let total = eachWayBets.reduce((acc, cv) => acc + cv?.amount, 0);
-  total = currencyFormatter.format(total);
-
   return (
     <>
       <IonHeader>
@@ -201,23 +193,11 @@ const Race = ({ match }) => {
           }}
         >
           <IonText>
-            <h1>Total Bet: {total}</h1>
-            <h2>Total Won: {totalWon}</h2>
-            <h2>Total Lost: {totalLost}</h2>
-            <h2>Total Open: {totalOpen}</h2>
+            <h1>Total Bet: {currencyFormatter.format(total)}</h1>
+            <h2>Total Won: {currencyFormatter.format(totalWon)}</h2>
+            <h2>Total Lost: {currencyFormatter.format(totalLost)}</h2>
+            <h2>Total Open: {currencyFormatter.format(totalOpen)}</h2>
           </IonText>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "10%",
-          }}
-        >
-          <IonRouterLink href={`/race/view/${race?.id}/addEachWay`}>
-            <IonButton>Create Bet</IonButton>
-          </IonRouterLink>
         </div>
         <div
           style={{
@@ -245,19 +225,41 @@ const Race = ({ match }) => {
                     width: "100%",
                   }}
                 >
+                  {/* TODO: Placeholder */}
+                  <img
+                    src={`https://www.procyclingstats.com/images/riders/bp/aa/${kebabCase(
+                      ew?.rider_name
+                    )}-${new Date().getFullYear()}.jpeg`}
+                  ></img>
                   <IonCardHeader>
                     <IonCardTitle>{ew?.rider_name}</IonCardTitle>
-                    <IonCardSubtitle>{ew?.rider_odds}</IonCardSubtitle>
+                    <IonCardSubtitle>Odds: {ew?.rider_odds}</IonCardSubtitle>
                   </IonCardHeader>
 
-                  <IonCardContent>{`Stake: ${ew?.amount}`}</IonCardContent>
-                  <IonButton
-                    size="small"
-                    color="danger"
+                  <IonCardContent>{`Stake: ${currencyFormatter.format(
+                    ew?.amount * (ew?.each_way ? 2 : 1)
+                  )}`}</IonCardContent>
+                  <button
+                    type="button"
                     onClick={() => deleteBet(ew?.id)}
+                    className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                   >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-3.5 h-3.5 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
                     Delete
-                  </IonButton>
+                  </button>
                   {ew.status && (
                     <IonSelect
                       label="Status"
@@ -283,6 +285,19 @@ const Race = ({ match }) => {
             <IonButton>Create Match Up</IonButton>
           </IonRouterLink> */}
         </div>
+        <IonFab
+          className="mb-16"
+          slot="fixed"
+          vertical="bottom"
+          horizontal="end"
+        >
+          <IonFabButton
+            href={`/race/view/${race?.id}/addEachWay`}
+            routerDirection="forward"
+          >
+            <IonIcon icon={add}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </>
   );

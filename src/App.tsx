@@ -7,6 +7,15 @@ import {
   IonIcon,
   IonLabel,
 } from "@ionic/react";
+import {
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonFabList,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { supabase } from "./supabaseClient";
 
@@ -29,7 +38,7 @@ import {
 } from "ionicons/icons";
 
 import Races from "./pages/Races";
-import DashboardPage from "./pages/DashboardPage";
+import DashboardPage from "./pages/DashboardPage.jsx";
 import LibraryPage from "./pages/LibraryPage";
 import SearchPage from "./pages/SearchPage";
 import ViewRaces from "./pages/races/ViewRacesPage";
@@ -101,10 +110,10 @@ const App: React.FC = () => {
               <IonLabel>Dashboard</IonLabel>
             </IonTabButton>
 
-            <IonTabButton tab="library" href="/library">
+            {/* <IonTabButton tab="library" href="/library">
               <IonIcon icon={library} />
               <IonLabel>Library</IonLabel>
-            </IonTabButton>
+            </IonTabButton> */}
 
             <IonTabButton tab="account" href="/account">
               <IonIcon icon={personCircleOutline} />

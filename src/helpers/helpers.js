@@ -18,6 +18,16 @@ export const BET_STATUS = {
   lost: 4,
 };
 
+export const round = (value, decimals) => {
+  return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
+};
+
+// export const fixBrokenOdds = (bet) => {
+//   if (bet.type === BET_TYPE['matchup']) {
+//     return (bet.matchup_return / )
+//   }
+// }
+
 export const BET_TYPE = {
   overall: 1,
   stage: 2,
@@ -48,16 +58,17 @@ export const calculateWinnings = (bets) => {
 
   bets.map((bet) => {
     t[bet.race_id] += bet.amount;
-    if (bet.each_way) {
+    if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
       t[bet.race_id] += bet.amount;
     }
 
     if (bet.status === BET_STATUS["won"]) {
-      if (bet.type != BET_TYPE["matchup"]) {
+      if (bet.type !== BET_TYPE["matchup"]) {
         tw[bet.race_id] += bet.amount * bet.rider_odds;
-      }
-      if (bet.each_way) {
-        tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
+        if (bet.each_way) {
+          tw[bet.race_id] +=
+            bet.amount * (bet.rider_odds * bet.each_way_return);
+        }
       }
     } else if (bet.status === BET_STATUS["lost"]) {
       tl[bet.race_id] += bet.amount * (bet.type.each_way ? 2 : 1);
@@ -71,10 +82,11 @@ export const calculateWinnings = (bets) => {
         tw[bet.race_id] += bet.amount;
       }
     } else {
+      // Open
       console.log("REACHED HERE");
       console.log(bet);
       to[bet.race_id] += bet.amount;
-      if (bet.each_way) {
+      if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
         to[bet.race_id] += bet.amount;
       }
     }

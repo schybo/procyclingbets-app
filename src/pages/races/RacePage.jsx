@@ -30,6 +30,7 @@ import {
   BET_STATUS,
   calculateWinnings,
   kebabCase,
+  BET_TYPE,
 } from "../../helpers/helpers";
 import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
 import { add } from "ionicons/icons";
@@ -202,8 +203,6 @@ const Race = ({ match }) => {
         </div>
         <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {eachWayBets.map((ew) => {
-            console.log("COOL");
-            console.log(ew);
             return (
               <IonCard
                 color="light"
@@ -225,14 +224,29 @@ const Race = ({ match }) => {
                   ></img>
                 </object>
                 <div className="flex flex-col justify-between p-4 leading-normal w-full">
-                  <div className="text-lg font-bold">{ew?.rider_name}</div>
-                  <div>Odds: {ew?.rider_odds?.toFixed(2)}</div>
+                  <div className="text-lg font-bold">
+                    {ew?.type == BET_TYPE["matchup"]
+                      ? "Matchup"
+                      : ew?.rider_name}
+                  </div>
+                  <div>
+                    <span className="font-bold">Odds: </span>
+                    {ew?.rider_odds && ew?.type != BET_TYPE["matchup"]
+                      ? ew.rider_odds.toFixed(2)
+                      : ew?.rider_odds}
+                  </div>
 
-                  <div>{`Stake: ${currencyFormatter.format(
-                    ew?.amount * (ew?.each_way ? 2 : 1)
-                  )}`}</div>
+                  <div>
+                    <span className="font-bold">Stake: </span>
+                    {`${currencyFormatter.format(
+                      ew?.amount *
+                        (ew?.type != BET_TYPE["matchup"] && ew?.each_way
+                          ? 2
+                          : 1)
+                    )}`}
+                  </div>
                   <div className="flex flex-row justify-start items-center mt-2">
-                    <label className="mb-2 mr-4">Status:</label>
+                    <label className="mb-2 mr-4 font-bold">Status:</label>
                     <IonSelect
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-1 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={ew.status}

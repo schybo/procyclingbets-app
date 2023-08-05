@@ -16,7 +16,7 @@ import { useIonRouter } from "@ionic/react";
 import { IonNav, IonToggle, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
-import { capitalizeFirstLetter } from "../../helpers/helpers";
+import { BET_TYPE, capitalizeFirstLetter, round } from "../../helpers/helpers";
 
 const EachWay = ({ match }) => {
   console.log("MATCH");
@@ -36,6 +36,7 @@ const EachWay = ({ match }) => {
     each_way_positions: 3,
     status: 5,
     type: 1,
+    matchup_return: null,
   });
 
   useEffect(() => {
@@ -112,6 +113,18 @@ const EachWay = ({ match }) => {
         updated_at: new Date(),
       };
 
+      if (data.amount === 0) {
+        showToast({
+          message: "Can't have no amount for bet",
+          duration: 5000,
+        });
+        throw "Can't have no amount for bet";
+      }
+
+      if (data.matchup_return != 0) {
+        data.rider_odds = round(data.matchup_return / data.amount, 2);
+      }
+
       console.log(data);
       let { error } = await supabase.from("eachWays").insert(data);
 
@@ -136,52 +149,78 @@ const EachWay = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
+        <div className="flex w-full items-center justify-center h-full">
           <IonList>
-            <IonItem>
-              <h1>{`Create Bet for ${race?.name}`}</h1>
-            </IonItem>
             <form onSubmit={(e) => createBet(e, bet)}>
               <IonItem>
-                <IonLabel>
-                  <p>Bet</p>
-                </IonLabel>
+                <IonLabel position="stacked">Type</IonLabel>
+                <IonSelect
+                  label="Type"
+                  placeholder="Overall"
+                  value={bet?.type}
+                  onIonChange={(e) =>
+                    setBet({ ...bet, type: e.detail.value ?? 0 })
+                  }
+                >
+                  {betTypes.map((bt) => {
+                    console.log("bt");
+                    console.log(bt);
+                    return (
+                      <IonSelectOption key={bt?.id} value={bt?.id}>
+                        {capitalizeFirstLetter(bt?.type)}
+                      </IonSelectOption>
+                    );
+                  })}
+                </IonSelect>
               </IonItem>
 
-              <IonItem>
-                <IonLabel position="stacked">Rider</IonLabel>
-                <IonInput
-                  type="text"
-                  name="rider_name"
-                  required={true}
-                  placeholder={"Adam Yates"}
-                  value={bet.rider_name}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, rider_name: e.detail.value ?? "" })
-                  }
-                ></IonInput>
-              </IonItem>
+              {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
+                <IonItem>
+                  <IonLabel position="stacked">Rider</IonLabel>
+                  <IonInput
+                    type="text"
+                    name="rider_name"
+                    required={true}
+                    placeholder={"Adam Yates"}
+                    value={bet.rider_name}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, rider_name: e.detail.value ?? "" })
+                    }
+                  ></IonInput>
+                </IonItem>
+              )}
 
-              <IonItem>
-                <IonLabel position="stacked">Odds</IonLabel>
-                <IonInput
-                  type="text"
-                  name="rider_odds"
-                  required={true}
-                  placeholder={121.0}
-                  value={bet.rider_odds}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, rider_odds: e.detail.value ?? 0 })
-                  }
-                ></IonInput>
-              </IonItem>
+              {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
+                <IonItem>
+                  <IonLabel position="stacked">Odds</IonLabel>
+                  <IonInput
+                    type="text"
+                    name="rider_odds"
+                    required={true}
+                    placeholder={121.0}
+                    value={bet.rider_odds}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, rider_odds: e.detail.value ?? 0 })
+                    }
+                  ></IonInput>
+                </IonItem>
+              )}
+
+              {bet?.type && bet?.type === BET_TYPE["matchup"] && (
+                <IonItem>
+                  <IonLabel position="stacked">Matchup Return</IonLabel>
+                  <IonInput
+                    type="text"
+                    name="matchup_return"
+                    required={true}
+                    placeholder={121.0}
+                    value={bet.matchup_return}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, matchup_return: e.detail.value ?? 0 })
+                    }
+                  ></IonInput>
+                </IonItem>
+              )}
 
               <IonItem>
                 <IonLabel position="stacked">Stake</IonLabel>
@@ -210,47 +249,28 @@ const EachWay = ({ match }) => {
                 ></IonInput>
               </IonItem> */}
 
-              <IonItem>
-                <IonLabel position="stacked">Each Way Return</IonLabel>
-                <IonInput
-                  type="text"
-                  name="each_way_return"
-                  required={true}
-                  value={bet.each_way_return}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, each_way_return: e.detail.value ?? 0 })
-                  }
-                ></IonInput>
-              </IonItem>
+              {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
+                <>
+                  <IonItem>
+                    <IonLabel position="stacked">Each Way Return</IonLabel>
+                    <IonInput
+                      type="text"
+                      name="each_way_return"
+                      required={true}
+                      value={bet.each_way_return}
+                      onIonChange={(e) =>
+                        setBet({ ...bet, each_way_return: e.detail.value ?? 0 })
+                      }
+                    ></IonInput>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="stacked">Is Each Way?</IonLabel>
+                    <IonToggle checked={bet.each_way}>Each Way?</IonToggle>
+                  </IonItem>
+                </>
+              )}
 
-              <IonItem>
-                <IonLabel position="stacked">Type</IonLabel>
-                <IonSelect
-                  label="Type"
-                  placeholder="Overall"
-                  value={bet?.type}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, type: e.detail.value ?? 0 })
-                  }
-                >
-                  {betTypes.map((bt) => {
-                    console.log("bt");
-                    console.log(bt);
-                    return (
-                      <IonSelectOption key={bt?.id} value={bt?.id}>
-                        {capitalizeFirstLetter(bt?.type)}
-                      </IonSelectOption>
-                    );
-                  })}
-                </IonSelect>
-              </IonItem>
-
-              <IonItem>
-                <IonLabel position="stacked">Is Each Way?</IonLabel>
-                <IonToggle checked={bet.each_way}>Each Way?</IonToggle>
-              </IonItem>
-
-              <div className="ion-text-center">
+              <div className="ion-text-center mt-8">
                 <IonButton type="submit">Create Bet</IonButton>
               </div>
             </form>

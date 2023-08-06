@@ -92,6 +92,13 @@ export const calculateWinnings = (bets) => {
     }
   });
 
+  for (const [key, value] of Object.entries(to)) {
+    to[key] = round(to[key], 2);
+    tw[key] = round(tw[key], 2);
+    t[key] = round(t[key], 2);
+    tl[key] = round(tl[key], 2);
+  }
+
   return {
     won: tw,
     lost: tl,

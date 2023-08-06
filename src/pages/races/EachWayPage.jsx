@@ -37,6 +37,7 @@ const EachWay = ({ match }) => {
     status: 5,
     type: 1,
     matchup_return: null,
+    live_bet: false,
   });
 
   useEffect(() => {
@@ -269,6 +270,10 @@ const EachWay = ({ match }) => {
                   </IonItem>
                 </>
               )}
+              <IonItem>
+                <IonLabel position="stacked">Live Bet?</IonLabel>
+                <IonToggle checked={bet.live_bet}>Live Bet?</IonToggle>
+              </IonItem>
 
               <div className="ion-text-center mt-8">
                 <IonButton type="submit">Create Bet</IonButton>

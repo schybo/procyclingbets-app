@@ -1,6 +1,7 @@
 import React from "react";
 import {
   IonList,
+  IonCard,
   IonHeader,
   IonContent,
   IonToolbar,
@@ -15,6 +16,7 @@ import { supabase } from "../../supabaseClient";
 import { race } from "q";
 import {
   capitalizeFirstLetter,
+  calculateWinnings,
   currencyFormatter,
   BET_STATUS,
 } from "../../helpers/helpers";
@@ -26,6 +28,7 @@ const ViewRaces = () => {
   const [session] = useState(() => supabase.auth.session());
   const [races, setRaces] = useState([]);
   const [eachWayBets, setEachWayBets] = useState([]);
+  const [total, setTotal] = useState({});
   const [totalWon, setTotalWon] = useState({});
   const [totalLost, setTotalLost] = useState({});
   const [totalOpen, setTotalOpen] = useState({});
@@ -33,6 +36,21 @@ const ViewRaces = () => {
   useEffect(() => {
     getRacesAndBets();
   }, [session]);
+
+  useEffect(() => {
+    // Assuming this comes after races
+    let result = calculateWinnings(eachWayBets);
+
+    // races.map((r) => {
+    //   totalWon[race.id] = 0;
+    //   totalLost[race.id] = 0;
+    //   totalOpen[race.id] = 0;
+    // })
+    setTotal(result["total"]);
+    setTotalOpen(result["open"]);
+    setTotalWon(result["won"]);
+    setTotalLost(result["lost"]);
+  }, [eachWayBets]);
 
   const getRacesAndBets = async () => {
     await showLoading();
@@ -70,10 +88,12 @@ const ViewRaces = () => {
         let totalWon = {};
         let totalLost = {};
         let totalOpen = {};
+        let total = {};
         data.map((race) => {
           totalWon[race.id] = 0;
           totalLost[race.id] = 0;
           totalOpen[race.id] = 0;
+          total[race.id] = 0;
         });
         setTotalOpen(totalOpen);
         setTotalWon(totalWon);
@@ -98,29 +118,10 @@ const ViewRaces = () => {
       throw error;
     }
 
-    let tw = totalWon;
-    let tl = totalLost;
-    let to = totalOpen;
     if (data) {
       console.log("Bets");
       console.log(data);
       setEachWayBets(data);
-      data.map((ew) => {
-        if (ew.status === BET_STATUS["won"]) {
-          tw[ew.race_id] += ew.amount * ew.rider_odds;
-        } else if (ew.status === BET_STATUS["lost"]) {
-          tl[ew.race_id] += ew.amount;
-        } else if (ew.status === BET_STATUS["placed"]) {
-          tw[ew.race_id] += ew.amount * (ew.rider_odds * ew.each_way_return);
-        } else if (ew.status === BET_STATUS["void"]) {
-          tw[ew.race_id] += ew.amount;
-        } else {
-          to[ew.race_id] += ew.amount;
-        }
-      });
-      setTotalOpen(to);
-      setTotalWon(tw);
-      setTotalLost(tl);
     }
   };
 
@@ -148,27 +149,41 @@ const ViewRaces = () => {
   return (
     <>
       <div className="mt-20 mb-32 w-full">
-        <IonList>
+        <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {races.map((r) => {
             console.log("COOL");
             console.log(r);
             return (
-              <IonItem key={r?.name}>
-                <div class="max-w-sm p-6 mb-4 w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                  <a href={`/race/view/${r.id}`}>
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      {r?.name}
-                    </h5>
-                  </a>
-                  <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    <h2>Total Won: {totalWon[r?.id]}</h2>
-                    <h2>Total Lost: {totalLost[r?.id]}</h2>
-                    <h2>Total Open: {totalOpen[r?.id]}</h2>
-                  </p>
-                  <div
-                    className="inline-flex rounded-md shadow-sm"
-                    role="group"
-                  >
+              <IonCard
+                color="light"
+                key={`race-${r?.id}`}
+                className="w-full md:w-64 mx-6 flex flex-row flex-wrap items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+              >
+                <div className="flex flex-col justify-between p-4 leading-normal w-full">
+                  <div className="text-lg font-bold">
+                    <a href={`/race/view/${r.id}`}>
+                      <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {r?.name}
+                      </h5>
+                    </a>
+                  </div>
+                  <div>
+                    <span className="font-bold">Total Bet: </span>
+                    {currencyFormatter.format(total[r?.id])}
+                  </div>
+                  <div>
+                    <span className="font-bold">Total Won: </span>
+                    {currencyFormatter.format(totalWon[r?.id])}
+                  </div>
+                  <div>
+                    <span className="font-bold">Total Lost: </span>
+                    {currencyFormatter.format(totalLost[r?.id])}
+                  </div>
+                  <div>
+                    <span className="font-bold">Total Open: </span>
+                    {currencyFormatter.format(totalOpen[r?.id])}
+                  </div>
+                  <div className="inline-flex mt-6" role="group">
                     <button
                       type="button"
                       onClick={() =>
@@ -220,10 +235,10 @@ const ViewRaces = () => {
                     </button>
                   </div>
                 </div>
-              </IonItem>
+              </IonCard>
             );
           })}
-        </IonList>
+        </div>
       </div>
     </>
   );

@@ -41,11 +41,14 @@ const ViewRaces = () => {
     // Assuming this comes after races
     let result = calculateWinnings(eachWayBets);
 
-    // races.map((r) => {
-    //   totalWon[race.id] = 0;
-    //   totalLost[race.id] = 0;
-    //   totalOpen[race.id] = 0;
-    // })
+    // If race has noooooo bets yet, we need to set default jic
+    races.map((r) => {
+      let options = ["total", "open", "won", "lost"];
+      options.map((opt) => {
+        result[opt][r.id] = r.id in result[opt] ? result[opt][r.id] : 0;
+      });
+    });
+
     setTotal(result["total"]);
     setTotalOpen(result["open"]);
     setTotalWon(result["won"]);

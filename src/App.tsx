@@ -45,7 +45,6 @@ import ViewRaces from "./pages/races/ViewRacesPage";
 import CreateRace from "./pages/races/CreateRacePage";
 import Race from "./pages/races/RacePage";
 import EachWay from "./pages/races/EachWayPage";
-import Head2Head from "./pages/races/Head2HeadPage";
 
 setupIonicReact();
 
@@ -82,7 +81,6 @@ const App: React.FC = () => {
             />
             <Route path="/race/view/:id" component={Race} />
             <Route path="/race/view/:id/addEachWay" component={EachWay} />
-            <Route path="/race/view/:id/addHead2Head" component={Head2Head} />
             <Route
               path="/dashboard"
               render={() => <DashboardPage />}

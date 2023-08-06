@@ -72,22 +72,11 @@ const CreateRace = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent class="ion-padding">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
-          <h1>Create Race</h1>
+        <div className="flex items-center flex-wrap flex-row justify-center mt-32">
+          <h1 className="text-xl font-bold w-full block text-center">
+            Create Race
+          </h1>
           <form onSubmit={(e) => createRace(e, race)}>
-            <IonItem>
-              <IonLabel>
-                <p>Race</p>
-              </IonLabel>
-            </IonItem>
-
             <IonItem>
               <IonLabel position="stacked">Name</IonLabel>
               <IonInput
@@ -100,10 +89,13 @@ const CreateRace = () => {
               ></IonInput>
             </IonItem>
 
-            <div className="ion-text-center">
-              <IonButton fill="clear" type="submit">
+            <div className="ion-text-center mt-8">
+              <button
+                type="submit"
+                className="text-white inline-flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              >
                 Create Race
-              </IonButton>
+              </button>
             </div>
           </form>
         </div>

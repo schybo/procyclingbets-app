@@ -88,7 +88,9 @@ const DashboardPage = () => {
   console.log("Length");
   console.log(eachWayBets.length);
   let winPercentage =
-    Math.round((100 - (wins / eachWayBets.length) * 100) * 100) / 100;
+    wins > 0
+      ? Math.round((100 - (wins / eachWayBets.length) * 100) * 100) / 100
+      : 0;
 
   return (
     <>
@@ -99,14 +101,25 @@ const DashboardPage = () => {
       </IonHeader>
       <IonContent>
         <div className="mt-20 mb-32 w-full flex flex-row flex-wrap items-center justify-center">
-          <IonText>
-            <h1>Total Bet: {currencyFormatter.format(total)}</h1>
-            <h2>Total Won: {currencyFormatter.format(totalWon)}</h2>
-            <h2>Total Lost: {currencyFormatter.format(totalLost)}</h2>
-            <h2>Total Open: {currencyFormatter.format(totalOpen)}</h2>
-            <h2>Wins: {wins}</h2>
-            <h2>Win Percentage: {winPercentage}%</h2>
-          </IonText>
+          <div className="w-full text-xl font-bold block text-center mb-8">
+            Betting Performance
+          </div>
+          <div className="text-md block text-center w-full">
+            <div className="mb-4">
+              Total Bet: {currencyFormatter.format(total)}
+            </div>
+            <div className="mb-4">
+              Total Won: {currencyFormatter.format(totalWon)}
+            </div>
+            <div className="mb-4">
+              Total Lost: {currencyFormatter.format(totalLost)}
+            </div>
+            <div className="mb-4">
+              Total Open: {currencyFormatter.format(totalOpen)}
+            </div>
+            <div className="mb-4">Wins: {wins}</div>
+            <div className="mb-4">Win Percentage: {winPercentage}%</div>
+          </div>
         </div>
       </IonContent>
     </>

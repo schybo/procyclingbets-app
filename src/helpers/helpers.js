@@ -71,14 +71,14 @@ export const calculateWinnings = (bets) => {
         }
       }
     } else if (bet.status === BET_STATUS["lost"]) {
-      tl[bet.race_id] += bet.amount * (bet.type.each_way ? 2 : 1);
+      tl[bet.race_id] += bet.amount * (bet.each_way ? 2 : 1);
     } else if (bet.status === BET_STATUS["placed"]) {
       // Assuming this is an each way bet
       tl[bet.race_id] += bet.amount;
       tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
     } else if (bet.status === BET_STATUS["void"]) {
       tw[bet.race_id] += bet.amount;
-      if (bet.type.each_way) {
+      if (bet.each_way) {
         tw[bet.race_id] += bet.amount;
       }
     } else {
@@ -93,12 +93,15 @@ export const calculateWinnings = (bets) => {
   });
 
   for (const [key, value] of Object.entries(to)) {
+    console.log("HERE YO");
     to[key] = round(to[key], 2);
     tw[key] = round(tw[key], 2);
     t[key] = round(t[key], 2);
     tl[key] = round(tl[key], 2);
   }
 
+  console.log("TOTAL WON");
+  console.log(tw);
   return {
     won: tw,
     lost: tl,

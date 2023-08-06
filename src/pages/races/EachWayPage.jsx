@@ -123,7 +123,7 @@ const EachWay = ({ match }) => {
         throw "Can't have no amount for bet";
       }
 
-      if (data.matchup_return != 0) {
+      if (data.type == BET_TYPE["matchup"] && data.matchup_return != 0) {
         data.rider_odds = round(data.matchup_return / data.amount, 2);
       }
 

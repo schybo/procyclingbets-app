@@ -57,10 +57,10 @@ const Race = ({ match }) => {
 
   useEffect(() => {
     let result = calculateWinnings(eachWayBets);
-    setTotal(result["total"][match.params.id]);
-    setTotalOpen(result["open"][match.params.id]);
-    setTotalWon(result["won"][match.params.id]);
-    setTotalLost(result["lost"][match.params.id]);
+    setTotal(result["total"][match.params.id] || 0);
+    setTotalOpen(result["open"][match.params.id] || 0);
+    setTotalWon(result["won"][match.params.id] || 0);
+    setTotalLost(result["lost"][match.params.id] || 0);
   }, [eachWayBets]);
 
   const getRaceAndBets = async () => {
@@ -327,9 +327,6 @@ const Race = ({ match }) => {
               </IonCard>
             );
           })}
-          {/* <IonRouterLink href={`/race/view/${race?.id}/addHead2Head`}>
-            <IonButton>Create Match Up</IonButton>
-          </IonRouterLink> */}
         </div>
         <IonFab
           className="mb-16"

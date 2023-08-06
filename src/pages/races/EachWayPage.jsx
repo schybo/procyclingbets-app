@@ -36,6 +36,7 @@ const EachWay = ({ match }) => {
     each_way_positions: 3,
     status: 5,
     type: 1,
+    race_id: match.params.id,
     matchup_return: null,
     live_bet: false,
   });

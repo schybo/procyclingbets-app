@@ -6,6 +6,7 @@ import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 import {
   capitalizeFirstLetter,
+  calculateWinnings,
   currencyFormatter,
   BET_STATUS,
 } from "../helpers/helpers";
@@ -15,6 +16,7 @@ const DashboardPage = () => {
   const [showToast] = useIonToast();
   const [session] = useState(() => supabase.auth.session());
   const [eachWayBets, setEachWayBets] = useState([]);
+  const [total, setTotal] = useState();
   const [totalWon, setTotalWon] = useState();
   const [totalLost, setTotalLost] = useState();
   const [totalOpen, setTotalOpen] = useState();
@@ -22,6 +24,29 @@ const DashboardPage = () => {
   useEffect(() => {
     getBets();
   }, [session]);
+
+  useEffect(() => {
+    // Assuming this comes after races
+    let result = calculateWinnings(eachWayBets);
+    console.log("WINNINGS");
+    console.log(result);
+
+    // Test using current data
+    let calcTotalWon = 0;
+    let calcTotalLost = 0;
+    let calcTotalOpen = 0;
+    let calcTotal = 0;
+    for (const [key, value] of Object.entries(result["won"])) {
+      calcTotalWon += result["won"][key];
+      calcTotalLost += result["lost"][key];
+      calcTotalOpen += result["open"][key];
+      calcTotal += result["total"][key];
+    }
+    setTotal(calcTotal);
+    setTotalOpen(calcTotalOpen);
+    setTotalWon(calcTotalWon);
+    setTotalLost(calcTotalLost);
+  }, [eachWayBets]);
 
   const getBets = async () => {
     await showLoading();
@@ -47,36 +72,15 @@ const DashboardPage = () => {
       throw error;
     }
 
-    let totalWon = 0;
-    let totalLost = 0;
-    let totalOpen = 0;
     if (data) {
       console.log("Bets");
       console.log(data);
       setEachWayBets(data);
-      data.map((ew) => {
-        if (ew.status === BET_STATUS["won"]) {
-          totalWon += ew.amount * ew.rider_odds;
-        } else if (ew.status === BET_STATUS["lost"]) {
-          totalLost += ew.amount;
-        } else if (ew.status === BET_STATUS["placed"]) {
-          totalWon += ew.amount * (ew.rider_odds * ew.each_way_return);
-        } else if (ew.status === BET_STATUS["void"]) {
-          totalWon += ew.amount;
-        } else {
-          totalOpen += ew.amount;
-        }
-      });
-      setTotalOpen(totalOpen);
-      setTotalWon(totalWon);
-      setTotalLost(totalLost);
     }
   };
 
   let isAWin = (status) =>
     status === BET_STATUS["placed"] || status === BET_STATUS["won"];
-  let total = eachWayBets.reduce((acc, cv) => acc + cv?.amount, 0);
-  total = currencyFormatter.format(total);
   let wins = eachWayBets.reduce(
     (acc, cv) => (isAWin(cv.status) ? acc + 1 : acc),
     0
@@ -94,19 +98,12 @@ const DashboardPage = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
+        <div className="mt-20 mb-32 w-full flex flex-row flex-wrap items-center justify-center">
           <IonText>
-            <h1>Total Bet: {total}</h1>
-            <h2>Total Won: {totalWon}</h2>
-            <h2>Total Lost: {totalLost}</h2>
-            <h2>Total Open: {totalOpen}</h2>
+            <h1>Total Bet: {currencyFormatter.format(total)}</h1>
+            <h2>Total Won: {currencyFormatter.format(totalWon)}</h2>
+            <h2>Total Lost: {currencyFormatter.format(totalLost)}</h2>
+            <h2>Total Open: {currencyFormatter.format(totalOpen)}</h2>
             <h2>Wins: {wins}</h2>
             <h2>Win Percentage: {winPercentage}%</h2>
           </IonText>

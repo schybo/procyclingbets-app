@@ -48,16 +48,26 @@ const Race = ({ match }) => {
   const [totalWon, setTotalWon] = useState();
   const [totalLost, setTotalLost] = useState();
   const [totalOpen, setTotalOpen] = useState();
+  const [ridersInfo, setRidersInfo] = useState();
   const [eachWayBets, setEachWayBets] = useState([]);
 
   useEffect(() => {
     getRaceAndBets();
   }, [session]);
 
+  useEffect(() => {
+    let result = calculateWinnings(eachWayBets);
+    setTotal(result["total"][match.params.id]);
+    setTotalOpen(result["open"][match.params.id]);
+    setTotalWon(result["won"][match.params.id]);
+    setTotalLost(result["lost"][match.params.id]);
+  }, [eachWayBets]);
+
   const getRaceAndBets = async () => {
     await showLoading();
     try {
       await getRace();
+      await getRidersInfo();
       await getEachWayBets();
       await getBetStatusOptions();
     } catch (error) {
@@ -107,13 +117,33 @@ const Race = ({ match }) => {
       console.log("Bets");
       console.log(data);
       setEachWayBets(data);
-      let result = calculateWinnings(data);
+      // let result = calculateWinnings(data);
       console.log("WINNINGS");
-      console.log(result);
-      setTotal(result["total"][match.params.id]);
-      setTotalOpen(result["open"][match.params.id]);
-      setTotalWon(result["won"][match.params.id]);
-      setTotalLost(result["lost"][match.params.id]);
+      // console.log(result);
+      // setTotal(result["total"][match.params.id]);
+      // setTotalOpen(result["open"][match.params.id]);
+      // setTotalWon(result["won"][match.params.id]);
+      // setTotalLost(result["lost"][match.params.id]);
+    }
+  };
+
+  const getRidersInfo = async () => {
+    console.log("Getting Rider Info");
+
+    let { data, error, status } = await supabase.from("riders").select();
+
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    let riderDict = {};
+    if (data) {
+      console.log("riders");
+      console.log(data);
+      data.map((r) => {
+        riderDict[r.rider_key] = r;
+      });
+      setRidersInfo(riderDict);
     }
   };
 
@@ -140,6 +170,14 @@ const Race = ({ match }) => {
       console.log(bet);
       console.log("Status");
       console.log(s);
+
+      let newBets = eachWayBets.map((b) => {
+        if (b.id === bet.id) {
+          b.status = s;
+        }
+        return b;
+      });
+      setEachWayBets(newBets);
 
       const { error, status } = await supabase
         .from("eachWays")
@@ -203,6 +241,9 @@ const Race = ({ match }) => {
         </div>
         <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {eachWayBets.map((ew) => {
+            let image = `https://www.procyclingstats.com/${
+              ridersInfo[kebabCase(ew?.rider_name)]?.image_url
+            }`;
             return (
               <IonCard
                 color="light"
@@ -217,9 +258,7 @@ const Race = ({ match }) => {
                 >
                   <img
                     className="w-36 rounded-t-lg h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                    src={`https://www.procyclingstats.com/images/riders/bp/aa/${kebabCase(
-                      ew?.rider_name
-                    )}-${new Date().getFullYear()}.jpeg`}
+                    src={image}
                     alt=""
                   ></img>
                 </object>

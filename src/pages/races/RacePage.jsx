@@ -49,6 +49,7 @@ const Race = ({ match }) => {
   const [totalLost, setTotalLost] = useState();
   const [totalOpen, setTotalOpen] = useState();
   const [ridersInfo, setRidersInfo] = useState();
+  const [betTypes, setTypes] = useState([]);
   const [eachWayBets, setEachWayBets] = useState([]);
 
   useEffect(() => {
@@ -66,6 +67,9 @@ const Race = ({ match }) => {
   const getRaceAndBets = async () => {
     await showLoading();
     try {
+      await getEachWayTypeOptions();
+      console.log("BET TYPES");
+      console.log(betTypes);
       await getRace();
       await getRidersInfo();
       await getEachWayBets();
@@ -75,6 +79,26 @@ const Race = ({ match }) => {
     } finally {
       console.log("Hide loading");
       await hideLoading();
+    }
+  };
+
+  const getEachWayTypeOptions = async () => {
+    console.log("Getting RACE");
+
+    let { data, error, status } = await supabase.from("eachWayType").select();
+
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    if (data) {
+      console.log("Types");
+      console.log(data);
+      let betType = {};
+      data.map((d) => {
+        betType[d.id] = d.type;
+      });
+      setTypes(betType);
     }
   };
 
@@ -267,6 +291,12 @@ const Race = ({ match }) => {
                     {ew?.type == BET_TYPE["matchup"]
                       ? "Matchup"
                       : ew?.rider_name}
+                  </div>
+                  <div>
+                    <span className="font-bold">Type: </span>
+                    {ew?.type && betTypes
+                      ? capitalizeFirstLetter(betTypes[ew?.type])
+                      : "Not set"}
                   </div>
                   <div>
                     <span className="font-bold">Odds: </span>

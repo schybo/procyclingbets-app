@@ -34,6 +34,7 @@ export const BET_TYPE = {
   kom: 3,
   points: 4,
   matchup: 5,
+  top3: 6,
 };
 
 export const kebabCase = (string) =>
@@ -71,14 +72,17 @@ export const calculateWinnings = (bets) => {
         }
       }
     } else if (bet.status === BET_STATUS["lost"]) {
-      tl[bet.race_id] += bet.amount * (bet.each_way ? 2 : 1);
+      tl[bet.race_id] += bet.amount;
+      if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
+        tl[bet.race_id] += bet.amount;
+      }
     } else if (bet.status === BET_STATUS["placed"]) {
       // Assuming this is an each way bet
       tl[bet.race_id] += bet.amount;
       tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
     } else if (bet.status === BET_STATUS["void"]) {
       tw[bet.race_id] += bet.amount;
-      if (bet.each_way) {
+      if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
         tw[bet.race_id] += bet.amount;
       }
     } else {

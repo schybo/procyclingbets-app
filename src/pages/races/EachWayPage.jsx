@@ -251,29 +251,50 @@ const EachWay = ({ match }) => {
                 ></IonInput>
               </IonItem> */}
 
-              {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
-                <>
-                  <IonItem>
-                    <IonLabel position="stacked">Each Way Return</IonLabel>
-                    <IonInput
-                      type="text"
-                      name="each_way_return"
-                      required={true}
-                      value={bet.each_way_return}
-                      onIonChange={(e) =>
-                        setBet({ ...bet, each_way_return: e.detail.value ?? 0 })
-                      }
-                    ></IonInput>
-                  </IonItem>
-                  <IonItem>
-                    <IonLabel position="stacked">Is Each Way?</IonLabel>
-                    <IonToggle checked={bet.each_way}>Each Way?</IonToggle>
-                  </IonItem>
-                </>
-              )}
+              {bet?.type &&
+                bet?.type !== BET_TYPE["matchup"] &&
+                bet?.type !== BET_TYPE["top3"] && (
+                  <>
+                    <IonItem>
+                      <IonLabel position="stacked">Is Each Way?</IonLabel>
+                      <IonToggle
+                        checked={bet.each_way}
+                        onIonChange={(e) =>
+                          setBet({ ...bet, each_way: !bet.each_way })
+                        }
+                      >
+                        Each Way?
+                      </IonToggle>
+                    </IonItem>
+                    {bet.each_way && (
+                      <IonItem>
+                        <IonLabel position="stacked">Each Way Return</IonLabel>
+                        <IonInput
+                          type="text"
+                          name="each_way_return"
+                          required={true}
+                          value={bet.each_way_return}
+                          onIonChange={(e) =>
+                            setBet({
+                              ...bet,
+                              each_way_return: e.detail.value ?? 0,
+                            })
+                          }
+                        ></IonInput>
+                      </IonItem>
+                    )}
+                  </>
+                )}
               <IonItem>
                 <IonLabel position="stacked">Live Bet?</IonLabel>
-                <IonToggle checked={bet.live_bet}>Live Bet?</IonToggle>
+                <IonToggle
+                  checked={bet.live_bet}
+                  onIonChange={(e) =>
+                    setBet({ ...bet, live_bet: !bet.live_bet })
+                  }
+                >
+                  Live Bet?
+                </IonToggle>
               </IonItem>
 
               <div className="ion-text-center mt-8">

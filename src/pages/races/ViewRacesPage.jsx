@@ -151,7 +151,7 @@ const ViewRaces = () => {
 
   return (
     <>
-      <div className="mt-20 mb-32 w-full">
+      <div className="w-full">
         <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {races.map((r) => {
             console.log("COOL");

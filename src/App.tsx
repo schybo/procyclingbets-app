@@ -24,6 +24,7 @@ import "@ionic/react/css/ionic.bundle.css";
 /* Theme variables */
 import "./theme/variables.css";
 import "./theme/tailwind.css";
+import "./theme/app.css";
 import { LoginPage } from "./pages/Login";
 import { AccountPage } from "./pages/Account";
 import { useEffect, useState } from "react";
@@ -97,14 +98,14 @@ const App: React.FC = () => {
             </Route>
           </IonRouterOutlet>
 
-          <IonTabBar slot="bottom">
+          <IonTabBar slot="bottom" className="shadow-topSm">
             <IonTabButton tab="home" href="/race">
-              <IonIcon icon={playCircle} />
+              <IonIcon src="assets/svgs/bicycle-man.svg" />
               <IonLabel>Races</IonLabel>
             </IonTabButton>
 
             <IonTabButton tab="dashboard" href="/dashboard">
-              <IonIcon icon={radio} />
+              <IonIcon src="assets/svgs/dashboard.svg" />
               <IonLabel>Dashboard</IonLabel>
             </IonTabButton>
 

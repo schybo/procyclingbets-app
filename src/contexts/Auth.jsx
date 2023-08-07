@@ -28,10 +28,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = {
-    signIn: () =>
-      supabase.auth.signInWithOAuth({
-        provider: "google",
-      }),
+    signIn: () => console.log("HELLO"),
+    // supabase.auth.signInWithOAuth({
+    //   provider: "google",
+    // }),
     signOut: () => supabase.auth.signOut(),
     user,
   };

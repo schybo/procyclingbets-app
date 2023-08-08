@@ -43,6 +43,11 @@ export const kebabCase = (string) =>
     .replace(/[\s_]+/g, "-")
     .toLowerCase();
 
+export const countEachWay = (bet) =>
+  bet.type !== BET_TYPE["matchup"] &&
+  bet.type !== BET_TYPE["top3"] &&
+  bet.each_way;
+
 export const calculateWinnings = (bets) => {
   let tw = {};
   let to = {};
@@ -59,7 +64,7 @@ export const calculateWinnings = (bets) => {
 
   bets.map((bet) => {
     t[bet.race_id] += bet.amount;
-    if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
+    if (countEachWay(bet)) {
       t[bet.race_id] += bet.amount;
     }
 
@@ -73,7 +78,7 @@ export const calculateWinnings = (bets) => {
       }
     } else if (bet.status === BET_STATUS["lost"]) {
       tl[bet.race_id] += bet.amount;
-      if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
+      if (countEachWay(bet)) {
         tl[bet.race_id] += bet.amount;
       }
     } else if (bet.status === BET_STATUS["placed"]) {
@@ -82,7 +87,7 @@ export const calculateWinnings = (bets) => {
       tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
     } else if (bet.status === BET_STATUS["void"]) {
       tw[bet.race_id] += bet.amount;
-      if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
+      if (countEachWay(bet)) {
         tw[bet.race_id] += bet.amount;
       }
     } else {
@@ -90,7 +95,7 @@ export const calculateWinnings = (bets) => {
       console.log("REACHED HERE");
       console.log(bet);
       to[bet.race_id] += bet.amount;
-      if (bet.type !== BET_TYPE["matchup"] && bet.each_way) {
+      if (countEachWay(bet)) {
         to[bet.race_id] += bet.amount;
       }
     }

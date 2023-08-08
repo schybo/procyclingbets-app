@@ -31,6 +31,7 @@ import {
   calculateWinnings,
   kebabCase,
   BET_TYPE,
+  countEachWay,
 } from "../../helpers/helpers";
 import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
 import { add } from "ionicons/icons";
@@ -308,10 +309,7 @@ const Race = ({ match }) => {
                   <div>
                     <span className="font-bold">Stake: </span>
                     {`${currencyFormatter.format(
-                      ew?.amount *
-                        (ew?.type != BET_TYPE["matchup"] && ew?.each_way
-                          ? 2
-                          : 1)
+                      ew?.amount * (countEachWay(ew) ? 2 : 1)
                     )}`}
                   </div>
                   <div className="flex flex-row justify-start items-center mt-2">

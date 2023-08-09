@@ -70,8 +70,11 @@ export const calculateWinnings = (bets) => {
 
     if (bet.status === BET_STATUS["won"]) {
       if (bet.type !== BET_TYPE["matchup"]) {
+        // Remember to always add back your base bet
+        tw[bet.race_id] += bet.amount;
         tw[bet.race_id] += bet.amount * bet.rider_odds;
         if (bet.each_way) {
+          tw[bet.race_id] += bet.amount;
           tw[bet.race_id] +=
             bet.amount * (bet.rider_odds * bet.each_way_return);
         }
@@ -84,6 +87,7 @@ export const calculateWinnings = (bets) => {
     } else if (bet.status === BET_STATUS["placed"]) {
       // Assuming this is an each way bet
       tl[bet.race_id] += bet.amount;
+      // Remember to always add the base amount you bet
       tw[bet.race_id] += bet.amount * (bet.rider_odds * bet.each_way_return);
     } else if (bet.status === BET_STATUS["void"]) {
       tw[bet.race_id] += bet.amount;

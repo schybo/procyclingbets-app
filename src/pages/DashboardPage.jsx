@@ -89,7 +89,7 @@ const DashboardPage = () => {
   console.log(eachWayBets.length);
   let winPercentage =
     wins > 0
-      ? Math.round((100 - (wins / eachWayBets.length) * 100) * 100) / 100
+      ? Math.round((100 - (1 - wins / eachWayBets.length) * 100) * 100) / 100
       : 0;
 
   return (
@@ -105,6 +105,9 @@ const DashboardPage = () => {
             Betting Performance
           </div>
           <div className="text-md block text-center w-full">
+            <div className="mb-4">
+              Net: {currencyFormatter.format(totalWon - total)}
+            </div>
             <div className="mb-4">
               Total Bet: {currencyFormatter.format(total)}
             </div>

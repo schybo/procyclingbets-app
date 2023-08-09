@@ -108,6 +108,9 @@ const DashboardPage = () => {
           </div>
           <div className="text-md block text-center w-full">
             <div className="mb-4">
+              Net: {currencyFormatter.format(totalWon - total)}
+            </div>
+            <div className="mb-4">
               Total Bet: {currencyFormatter.format(total)}
             </div>
             <div className="mb-4">

@@ -256,8 +256,11 @@ const Race = ({ match }) => {
         <div className="flex items-center flex-row flex-wrap justify-center mt-12 mb-8 text-center">
           <IonText>
             <h1 className="text-xl font-bold mb-2">
-              Total Bet: {currencyFormatter.format(total)}
+              Net: {currencyFormatter.format(totalWon - total)}
             </h1>
+            <h2 className="text-lg mb-2">
+              Total Bet: {currencyFormatter.format(total)}
+            </h2>
             <h2 className="text-lg mt-2">
               Total Won: {currencyFormatter.format(totalWon)}
             </h2>

@@ -27,27 +27,27 @@ import "@ionic/react/css/ionic.bundle.css";
 import "./theme/variables.css";
 import "./theme/tailwind.css";
 import "./theme/app.css";
-import { LoginPage } from "./pages/Login";
-import { AccountPage } from "./pages/Account";
+// import { LoginPage } from "./pages/Login";
+// import { AccountPage } from "./pages/Account";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
+// import { Session } from "@supabase/supabase-js";
 
-import {
-  playCircle,
-  radio,
-  library,
-  search,
-  personCircleOutline,
-} from "ionicons/icons";
+// import {
+//   playCircle,
+//   radio,
+//   library,
+//   search,
+//   personCircleOutline,
+// } from "ionicons/icons";
 
-import Races from "./pages/Races";
-import DashboardPage from "./pages/DashboardPage.jsx";
-import LibraryPage from "./pages/LibraryPage";
-import SearchPage from "./pages/SearchPage";
-import ViewRaces from "./pages/races/ViewRacesPage";
-import CreateRace from "./pages/races/CreateRacePage";
-import Race from "./pages/races/RacePage";
-import EachWay from "./pages/races/EachWayPage";
+// import Races from "./pages/Races";
+// import DashboardPage from "./pages/DashboardPage.jsx";
+// import LibraryPage from "./pages/LibraryPage";
+// import SearchPage from "./pages/SearchPage";
+// import ViewRaces from "./pages/races/ViewRacesPage";
+// import CreateRace from "./pages/races/CreateRacePage";
+// import Race from "./pages/races/RacePage";
+// import EachWay from "./pages/races/EachWayPage";
 
 setupIonicReact();
 
@@ -68,9 +68,13 @@ const App = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // const session = null;
   if (!session) {
+    console.log("HELLO");
+    // return <div>Logged out!</div>;
     return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />;
   } else {
+    console.log("BLAH");
     return (
       <div>Logged in!</div>
       // <IonApp>

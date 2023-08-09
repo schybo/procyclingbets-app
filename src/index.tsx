@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
-import { AuthProvider } from "./contexts/Auth";
+// import { AuthProvider } from "./contexts/Auth";
 defineCustomElements(window);
 ReactDOM.render(
   <React.StrictMode>

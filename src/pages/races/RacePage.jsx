@@ -42,7 +42,7 @@ const Race = ({ match }) => {
   const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
-  const [session] = useState(() => supabase.auth.session());
+  const [session] = useState(() => supabase.auth.getSession());
   const [race, setRace] = useState();
   const [betStatus, setStatus] = useState([]);
   const [total, setTotal] = useState();
@@ -55,6 +55,7 @@ const Race = ({ match }) => {
 
   useEffect(() => {
     getRaceAndBets();
+    return () => {};
   }, [session]);
 
   useEffect(() => {
@@ -106,7 +107,9 @@ const Race = ({ match }) => {
   const getRace = async () => {
     console.log("Getting RACE");
 
-    const user = supabase.auth.user();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     let { data, error, status } = await supabase
       .from("races")
       .select()
@@ -127,7 +130,9 @@ const Race = ({ match }) => {
 
   const getEachWayBets = async () => {
     console.log("Getting Bets for races");
-    const user = supabase.auth.user();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     let { data, error, status } = await supabase
       .from("eachWays")
       .select()

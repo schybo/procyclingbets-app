@@ -24,7 +24,7 @@ const EachWay = ({ match }) => {
   const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
-  const [session] = useState(() => supabase.auth.session());
+  const [session] = useState(() => supabase.auth.getSession());
   const [race, setRace] = useState();
   const [betTypes, setTypes] = useState([]);
   const [bet, setBet] = useState({
@@ -61,7 +61,9 @@ const EachWay = ({ match }) => {
   const getRace = async () => {
     console.log("Getting RACE");
 
-    const user = supabase.auth.user();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     let { data, error, status } = await supabase
       .from("races")
       .select()
@@ -104,7 +106,9 @@ const EachWay = ({ match }) => {
     await showLoading();
 
     try {
-      const user = supabase.auth.user();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       console.log("USER");
       console.log(user);
 

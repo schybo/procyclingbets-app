@@ -25,7 +25,7 @@ const ViewRaces = () => {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
   const router = useIonRouter();
-  const [session] = useState(() => supabase.auth.session());
+  const [session, setSession] = useState(null);
   const [races, setRaces] = useState([]);
   const [eachWayBets, setEachWayBets] = useState([]);
   const [total, setTotal] = useState({});
@@ -34,7 +34,22 @@ const ViewRaces = () => {
   const [totalOpen, setTotalOpen] = useState({});
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
     getRacesAndBets();
+    return () => {};
   }, [session]);
 
   useEffect(() => {
@@ -56,8 +71,8 @@ const ViewRaces = () => {
   }, [eachWayBets]);
 
   const getRacesAndBets = async () => {
-    await showLoading();
     try {
+      // await showLoading();
       await getRaces();
       await getEachWayBets();
     } catch (error) {
@@ -70,9 +85,11 @@ const ViewRaces = () => {
 
   const getRaces = async () => {
     console.log("getting races");
-    await showLoading();
+    // await showLoading();
     try {
-      const user = supabase.auth.user();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       let { data, error, status } = await supabase
         .from("races")
         .select()
@@ -83,7 +100,6 @@ const ViewRaces = () => {
       }
 
       if (data) {
-        console.log("HEELOO");
         console.log("Race data");
         console.log(data);
         setRaces(data);
@@ -111,7 +127,9 @@ const ViewRaces = () => {
 
   const getEachWayBets = async () => {
     console.log("Getting Bets for races");
-    const user = supabase.auth.user();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     let { data, error, status } = await supabase
       .from("eachWays")
       .select()
@@ -154,8 +172,6 @@ const ViewRaces = () => {
       <div className="w-full">
         <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {races.map((r) => {
-            console.log("COOL");
-            console.log(r);
             return (
               <IonCard
                 color="light"

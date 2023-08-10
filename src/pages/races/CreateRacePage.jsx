@@ -18,7 +18,7 @@ const CreateRace = () => {
   const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
-  const [session] = useState(() => supabase.auth.session());
+  const [session] = useState(() => supabase.auth.getSession());
   const createRace = async (e, race) => {
     e?.preventDefault();
 
@@ -26,7 +26,9 @@ const CreateRace = () => {
     await showLoading();
     let createdRace = null;
     try {
-      const user = supabase.auth.user();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       console.log("USER");
       console.log(user);
       const dataToCreate = {

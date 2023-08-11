@@ -14,7 +14,7 @@ import {
 const DashboardPage = () => {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
-  const [session] = useState(() => supabase.auth.session());
+  const [session] = useState(() => supabase.auth.getSession());
   const [eachWayBets, setEachWayBets] = useState([]);
   const [total, setTotal] = useState();
   const [totalWon, setTotalWon] = useState();
@@ -62,7 +62,9 @@ const DashboardPage = () => {
 
   const getEachWayBets = async () => {
     console.log("Getting Bets for races");
-    const user = supabase.auth.user();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     let { data, error, status } = await supabase
       .from("eachWays")
       .select()

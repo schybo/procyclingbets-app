@@ -1,76 +1,33 @@
-import { useState } from "react";
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  useIonToast,
-  useIonLoading,
-} from "@ionic/react";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../supabaseClient";
 
-export function LoginPage() {
-  const [email, setEmail] = useState("");
-
-  const [showLoading, hideLoading] = useIonLoading();
-  const [showToast] = useIonToast();
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log();
-    e.preventDefault();
-    await showLoading();
-    try {
-      await supabase.auth.signIn({ email });
-      await showToast({ message: "Check your email for the login link!" });
-    } catch (e: any) {
-      await showToast({
-        message: e.error_description || e.message,
-        duration: 5000,
-      });
-    } finally {
-      await hideLoading();
-    }
-  };
+export function Login() {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent>
-        <div className="ion-padding">
-          <h1>Supabase + Ionic React</h1>
-          <p>Sign in via magic link with your email below</p>
+    <section className="bg-gray-50 dark:bg-gray-900 h-full">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
+        <a
+          href="/"
+          className="flex items-center flex-row flex-wrap mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+        >
+          <img
+            className="w-8 h-8 mr-2 block"
+            // src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+            src="/assets/icon/icon.png"
+            alt="logo"
+          />
+          Pro Cycling Bets
+        </a>
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space">
+            <Auth
+              supabaseClient={supabase}
+              providers={["google", "github", "facebook", "discord"]}
+              appearance={{ theme: ThemeSupa }}
+            />
+          </div>
         </div>
-        <IonList inset={true}>
-          <form onSubmit={handleLogin}>
-            <IonItem>
-              <IonLabel position="stacked">Email</IonLabel>
-              <IonInput
-                value={email}
-                name="email"
-                onIonChange={(e) => setEmail(e.detail.value ?? "")}
-                type="email"
-              ></IonInput>
-            </IonItem>
-            <div className="ion-text-center">
-              <IonButton type="submit" fill="clear">
-                Login
-              </IonButton>
-              <IonButton type="submit" fill="clear">
-                Save
-              </IonButton>
-            </div>
-          </form>
-        </IonList>
-      </IonContent>
-    </IonPage>
+      </div>
+    </section>
   );
 }

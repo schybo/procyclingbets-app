@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import App from "./App.jsx";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
-import { AuthProvider } from "./contexts/Auth";
+// import { AuthProvider } from "./contexts/Auth";
 defineCustomElements(window);
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    {/* <AuthProvider> */}
+    <App />
+    {/* </AuthProvider> */}
   </React.StrictMode>,
   document.getElementById("root")
 );

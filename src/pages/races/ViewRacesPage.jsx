@@ -170,7 +170,7 @@ const ViewRaces = () => {
   return (
     <>
       <div className="w-full">
-        <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
+        <div className="w-full flex flex-row flex-wrap items-center justify-center">
           {races.map((r) => {
             return (
               <IonCard
@@ -208,7 +208,7 @@ const ViewRaces = () => {
                       onClick={() =>
                         router.push(`/race/view/${r.id}`, "forward", "replace")
                       }
-                      className="text-white inline-flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                      className="text-white inline-flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +234,7 @@ const ViewRaces = () => {
                     <button
                       type="button"
                       onClick={() => deleteRace(r?.id)}
-                      className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                      className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

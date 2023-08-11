@@ -91,7 +91,7 @@ const DashboardPage = () => {
   console.log(eachWayBets.length);
   let winPercentage =
     wins > 0
-      ? Math.round((100 - (wins / eachWayBets.length) * 100) * 100) / 100
+      ? Math.round((100 - (1 - wins / eachWayBets.length) * 100) * 100) / 100
       : 0;
 
   return (

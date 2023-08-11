@@ -39,6 +39,7 @@ const EachWay = ({ match }) => {
     race_id: match.params.id,
     matchup_return: null,
     live_bet: false,
+    synthetic: false,
   });
 
   useEffect(() => {
@@ -257,7 +258,8 @@ const EachWay = ({ match }) => {
 
               {bet?.type &&
                 bet?.type !== BET_TYPE["matchup"] &&
-                bet?.type !== BET_TYPE["top3"] && (
+                bet?.type !== BET_TYPE["top3"] &&
+                bet?.type !== BET_TYPE["top10"] && (
                   <>
                     <IonItem>
                       <IonLabel position="stacked">Is Each Way?</IonLabel>
@@ -295,6 +297,18 @@ const EachWay = ({ match }) => {
                   checked={bet.live_bet}
                   onIonChange={(e) =>
                     setBet({ ...bet, live_bet: !bet.live_bet })
+                  }
+                >
+                  Live Bet?
+                </IonToggle>
+              </IonItem>
+
+              <IonItem>
+                <IonLabel position="stacked">Synthetic?</IonLabel>
+                <IonToggle
+                  checked={bet.synthetic}
+                  onIonChange={(e) =>
+                    setBet({ ...bet, synthetic: !bet.synthetic })
                   }
                 >
                   Live Bet?

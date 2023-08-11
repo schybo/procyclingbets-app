@@ -27,10 +27,9 @@ import "@ionic/react/css/ionic.bundle.css";
 import "./theme/variables.css";
 import "./theme/tailwind.css";
 import "./theme/app.css";
-import { LoginPage } from "./pages/Login";
+import { Login } from "./pages/Login";
 import { AccountPage } from "./pages/Account";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
 
 import {
   playCircle,
@@ -42,8 +41,6 @@ import {
 
 import Races from "./pages/Races";
 import DashboardPage from "./pages/DashboardPage.jsx";
-import LibraryPage from "./pages/LibraryPage";
-import SearchPage from "./pages/SearchPage";
 import ViewRaces from "./pages/races/ViewRacesPage";
 import CreateRace from "./pages/races/CreateRacePage";
 import Race from "./pages/races/RacePage";
@@ -52,11 +49,14 @@ import EachWay from "./pages/races/EachWayPage";
 setupIonicReact();
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [session, setSession] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setIsLoading(false);
     });
 
     const {
@@ -68,41 +68,13 @@ const App = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // const session = null;
-  if (!session) {
-    console.log("HELLO");
-    // return <div>Logged out!</div>;
-    return (
-      <section class="bg-gray-50 dark:bg-gray-900">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <a
-            href="#"
-            class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-          >
-            <img
-              class="w-8 h-8 mr-2"
-              // src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-              src="/assets/icon/icon.png"
-              alt="logo"
-            />
-            Pro Cycling Bets
-          </a>
-          <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-            <div class="p-6 space-y-4 md:space">
-              <Auth
-                supabaseClient={supabase}
-                providers={["google", "github", "facebook", "discord"]}
-                appearance={{ theme: ThemeSupa }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-    );
+  if (isLoading) {
+    console.log("LOADING");
+    return <div></div>;
+  } else if (!session) {
+    return <Login></Login>;
   } else {
-    console.log("BLAH");
     return (
-      // <div>Logged in!</div>
       <IonApp>
         <IonReactRouter>
           <IonTabs>
@@ -111,7 +83,7 @@ const App = () => {
                 exact
                 path="/"
                 render={() => {
-                  return session ? <Redirect to="/race" /> : <LoginPage />;
+                  return session ? <Redirect to="/race" /> : <Login />;
                 }}
               />
               <Route path="/race" render={() => <Races />} exact={true} />
@@ -132,16 +104,6 @@ const App = () => {
                 render={() => <DashboardPage />}
                 exact={true}
               />
-              <Route
-                path="/library"
-                render={() => <LibraryPage />}
-                exact={true}
-              />
-              <Route
-                path="/search"
-                render={() => <SearchPage />}
-                exact={true}
-              />
               <Route exact path="/account">
                 <AccountPage />
               </Route>
@@ -157,11 +119,6 @@ const App = () => {
                 <IonIcon src="assets/svgs/dashboard.svg" />
                 <IonLabel>Dashboard</IonLabel>
               </IonTabButton>
-
-              {/* <IonTabButton tab="library" href="/library">
-              <IonIcon icon={library} />
-              <IonLabel>Library</IonLabel>
-            </IonTabButton> */}
 
               <IonTabButton tab="account" href="/account">
                 <IonIcon icon={personCircleOutline} />

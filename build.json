@@ -1,0 +1,11 @@
+{
+  "android": {
+    "release": {
+      "keystore": "pcb.keystore",
+      "storePassword": "Very!Happy!1",
+      "alias": "pcb",
+      "password": "Very!Happy!1",
+      "keystoreType": ""
+    }
+  }
+}

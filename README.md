@@ -2,7 +2,6 @@
 
 > This project is based on the Supabase Ionic React user management [Quickstart](https://supabase.io/docs/guides/with-ionic-react)
 > To keep it in sync with this Quickstart, architecture choices have been made to facilitate the comparison
->
 
 This example will set you up for a very common situation: users can sign up with a magic link and then update their account with profile information, including a profile image.
 
@@ -131,3 +130,12 @@ create policy "Anyone can upload an avatar."
 - [Mike Hartington](https://github.com/mhartington)
 
 Supabase is open source. We'd love for you to follow along and get involved at https://github.com/supabase/supabase
+
+# Releasing for Android
+
+```
+java -jar keys/pepk.jar --keystore=pcb.keystore --alias=pcb --output=output.zip --include-cert --rsa-aes-encryption --encryption-key-path=/Users/brentscheibelhut/procyclingbets-app/keys/encryption_public_key.pem
+
+jarsigner -keystore /Users/brentscheibelhut/procyclingbets-app/pcb.keystore app-release-unsigned.apk pcb &&
+/Users/brentscheibelhut/Library/Android/sdk/build-tools/30.0.2/zipalign 4 app-release-unsigned.apk app-release.apk
+```

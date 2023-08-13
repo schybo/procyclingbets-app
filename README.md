@@ -134,7 +134,16 @@ Supabase is open source. We'd love for you to follow along and get involved at h
 # Releasing for Android
 
 ```
+cd android &&
+<!-- FOR JUST APK -->
+./gradlew assembleRelease &&
+<!-- FOR ABB -->
+./gradlew bundleRelease &&
+cd app/build/outputs/apk/release &&
+
 java -jar keys/pepk.jar --keystore=pcb.keystore --alias=pcb --output=output.zip --include-cert --rsa-aes-encryption --encryption-key-path=/Users/brentscheibelhut/procyclingbets-app/keys/encryption_public_key.pem
+
+jarsigner -keystore /Users/brentscheibelhut/procyclingbets-app/pcb.keystore app-release.aab pcb
 
 jarsigner -keystore /Users/brentscheibelhut/procyclingbets-app/pcb.keystore app-release-unsigned.apk pcb &&
 /Users/brentscheibelhut/Library/Android/sdk/build-tools/30.0.2/zipalign 4 app-release-unsigned.apk app-release.apk

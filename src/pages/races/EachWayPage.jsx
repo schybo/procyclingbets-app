@@ -38,6 +38,7 @@ const EachWay = ({ match }) => {
     type: 1,
     race_id: match.params.id,
     matchup_return: null,
+    matchup_legs: null,
     live_bet: false,
     synthetic: false,
   });
@@ -214,19 +215,35 @@ const EachWay = ({ match }) => {
               )}
 
               {bet?.type && bet?.type === BET_TYPE["matchup"] && (
-                <IonItem>
-                  <IonLabel position="stacked">Matchup Return</IonLabel>
-                  <IonInput
-                    type="text"
-                    name="matchup_return"
-                    required={true}
-                    placeholder={121.0}
-                    value={bet.matchup_return}
-                    onIonChange={(e) =>
-                      setBet({ ...bet, matchup_return: e.detail.value ?? 0 })
-                    }
-                  ></IonInput>
-                </IonItem>
+                <>
+                  <IonItem>
+                    <IonLabel position="stacked">Matchup Return</IonLabel>
+                    <IonInput
+                      type="text"
+                      name="matchup_return"
+                      required={true}
+                      placeholder={121.0}
+                      value={bet.matchup_return}
+                      onIonChange={(e) =>
+                        setBet({ ...bet, matchup_return: e.detail.value ?? 0 })
+                      }
+                    ></IonInput>
+                  </IonItem>
+
+                  <IonItem>
+                    <IonLabel position="stacked">Number of Legs</IonLabel>
+                    <IonInput
+                      type="text"
+                      name="matchup_legs"
+                      required={true}
+                      placeholder={3}
+                      value={bet.matchup_legs}
+                      onIonChange={(e) =>
+                        setBet({ ...bet, matchup_legs: e.detail.value ?? 0 })
+                      }
+                    ></IonInput>
+                  </IonItem>
+                </>
               )}
 
               <IonItem>
@@ -311,7 +328,7 @@ const EachWay = ({ match }) => {
                     setBet({ ...bet, synthetic: !bet.synthetic })
                   }
                 >
-                  Live Bet?
+                  Synthetic?
                 </IonToggle>
               </IonItem>
 

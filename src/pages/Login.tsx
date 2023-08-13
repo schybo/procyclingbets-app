@@ -24,6 +24,7 @@ export function Login() {
               supabaseClient={supabase}
               providers={["google", "github", "facebook", "discord"]}
               appearance={{ theme: ThemeSupa }}
+              redirectTo={"http://localhost:8100"}
             />
           </div>
         </div>

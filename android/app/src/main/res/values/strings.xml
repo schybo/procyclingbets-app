@@ -1,7 +1,8 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8' ?>
 <resources>
     <string name="app_name">Pro Cycling Bets</string>
     <string name="title_activity_main">Pro Cycling Bets</string>
     <string name="package_name">com.procyclingbets.app</string>
     <string name="custom_url_scheme">com.procyclingbets.app</string>
+    <string name="filter_view_example_gizmos">Example Gizmos</string>
 </resources>

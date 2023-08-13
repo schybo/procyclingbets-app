@@ -1,3 +1,5 @@
+import deburr from "lodash.deburr";
+
 export const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -38,11 +40,20 @@ export const BET_TYPE = {
   top10: 7,
 };
 
-export const kebabCase = (string) =>
-  string
+export const convertToEnglish = (string) => {
+  return string.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+};
+
+export const kebabCase = (string) => {
+  string = deburr(string);
+  console.log("STRING");
+  console.log(string);
+  return string
     .replace(/([a-z])([A-Z])/g, "$1-$2")
     .replace(/[\s_]+/g, "-")
+    .replace(/\W/g, "") // Removes non alpha numeric characters
     .toLowerCase();
+};
 
 export const countEachWay = (bet) =>
   bet.type !== BET_TYPE["matchup"] &&

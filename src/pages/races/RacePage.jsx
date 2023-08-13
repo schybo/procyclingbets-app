@@ -171,7 +171,8 @@ const Race = ({ match }) => {
       console.log("riders");
       console.log(data);
       data.map((r) => {
-        riderDict[r.rider_key] = r;
+        // riderDict[r.rider_key] = r;
+        riderDict[kebabCase(r.name)] = r;
       });
       setRidersInfo(riderDict);
     }
@@ -274,6 +275,8 @@ const Race = ({ match }) => {
         </div>
         <div className="w-full flex flex-row flex-wrap items-center justify-center mb-32">
           {eachWayBets.map((ew) => {
+            console.log("Rider name");
+            console.log(kebabCase(ew?.rider_name));
             let image = `https://www.procyclingstats.com/${
               ridersInfo[kebabCase(ew?.rider_name)]?.image_url
             }`;
@@ -284,17 +287,25 @@ const Race = ({ match }) => {
                 className="w-full md:w-64 mx-6 flex flex-row items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
                 {/* TODO: Placeholder */}
-                <object
-                  data="https://stackoverflow.com/does-not-exist.png"
-                  type="image/png"
-                  className="w-36"
-                >
+                {ew?.type != BET_TYPE["matchup"] ? (
+                  <object
+                    data="https://stackoverflow.com/does-not-exist.png"
+                    type="image/png"
+                    className="w-36"
+                  >
+                    <img
+                      className="w-36 rounded-t-lg h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                      src={image}
+                      alt=""
+                    ></img>
+                  </object>
+                ) : (
                   <img
-                    className="w-36 rounded-t-lg h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                    src={image}
+                    className="w-32 mx-8 rounded-t-lg h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                    src="assets/svgs/swords2.svg"
                     alt=""
                   ></img>
-                </object>
+                )}
                 <div className="flex flex-col justify-between p-4 leading-normal w-full">
                   <div className="text-lg font-bold">
                     {ew?.type == BET_TYPE["matchup"]

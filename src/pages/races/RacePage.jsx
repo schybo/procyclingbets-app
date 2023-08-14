@@ -169,7 +169,7 @@ const Race = ({ match }) => {
     let riderDict = {};
     if (data) {
       console.log("riders");
-      console.log(data);
+      // console.log(data);
       data.map((r) => {
         // riderDict[r.rider_key] = r;
         riderDict[kebabCase(r.name)] = r;
@@ -284,7 +284,7 @@ const Race = ({ match }) => {
               <IonCard
                 color="light"
                 key={`bet-${ew?.id}`}
-                className="w-full md:w-64 mx-6 flex flex-row items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                className="w-full md:w-64 mx-6 h-60 flex flex-row items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
                 {/* TODO: Placeholder */}
                 {ew?.type != BET_TYPE["matchup"] ? (
@@ -301,13 +301,13 @@ const Race = ({ match }) => {
                   </object>
                 ) : (
                   <img
-                    className="w-32 mx-8 rounded-t-lg h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                    className="w-12 mx-4 rounded-t-lg h-auto md:rounded-none md:rounded-l-lg"
                     src="assets/svgs/swords2.svg"
                     alt=""
                   ></img>
                 )}
-                <div className="flex flex-col justify-between p-4 leading-normal w-full">
-                  <div className="text-lg font-bold">
+                <div className="w-40 flex flex-col justify-between p-4 leading-normal">
+                  <div className="text-lg font-bold overflow-hidden truncate">
                     {ew?.type == BET_TYPE["matchup"]
                       ? "Matchup"
                       : ew?.rider_name}
@@ -334,7 +334,7 @@ const Race = ({ match }) => {
                   <div className="flex flex-row justify-start items-center mt-2">
                     <label className="mb-2 mr-4 font-bold">Status:</label>
                     <IonSelect
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-1 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                      className="bg-gray-50 border border-gray-300 min-h-0 p-1 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-0.5 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={ew.status}
                       onIonChange={(e) => setBetStatus(ew, e.detail.value)}
                     >

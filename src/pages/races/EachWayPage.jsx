@@ -41,6 +41,7 @@ const EachWay = ({ match }) => {
     matchup_legs: null,
     live_bet: false,
     synthetic: false,
+    time_trial: false,
   });
 
   useEffect(() => {
@@ -157,13 +158,13 @@ const EachWay = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="flex w-full items-center justify-center h-full">
+        <div className="flex w-full items-center justify-center h-screen mb-32">
           <IonList>
             <form onSubmit={(e) => createBet(e, bet)}>
               <IonItem>
                 <IonLabel position="stacked">Type</IonLabel>
                 <IonSelect
-                  label="Type"
+                  className="bg-gray-50 border border-gray-300 min-h-0 p-1 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-0.5 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   placeholder="Overall"
                   value={bet?.type}
                   onIonChange={(e) =>
@@ -329,6 +330,18 @@ const EachWay = ({ match }) => {
                   }
                 >
                   Synthetic?
+                </IonToggle>
+              </IonItem>
+
+              <IonItem>
+                <IonLabel position="stacked">Time Trial?</IonLabel>
+                <IonToggle
+                  checked={bet.time_trial}
+                  onIonChange={(e) =>
+                    setBet({ ...bet, time_trial: !bet.time_trial })
+                  }
+                >
+                  Time Trial?
                 </IonToggle>
               </IonItem>
 

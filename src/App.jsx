@@ -22,11 +22,13 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "./supabaseClient";
 
 import "@ionic/react/css/ionic.bundle.css";
+// import "@radix-ui/themes/styles.css";
 
 /* Theme variables */
 import "./theme/variables.css";
 import "./theme/tailwind.css";
 import "./theme/app.css";
+// import { Theme } from "@radix-ui/themes";
 import { Login } from "./pages/Login";
 import { AccountPage } from "./pages/Account";
 import { useEffect, useState } from "react";
@@ -95,6 +97,7 @@ const App = () => {
     return <Login></Login>;
   } else {
     return (
+      // <Theme>
       <IonApp>
         <IonReactRouter>
           <IonTabs>
@@ -148,6 +151,7 @@ const App = () => {
           </IonTabs>
         </IonReactRouter>
       </IonApp>
+      // </Theme>
     );
   }
 };

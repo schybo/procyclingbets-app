@@ -7,19 +7,11 @@ import {
   IonIcon,
   IonLabel,
 } from "@ionic/react";
-import {
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "./supabaseClient";
+import { useIonLoading, useIonRouter } from "@ionic/react";
 
 import "@ionic/react/css/ionic.bundle.css";
 // import "@radix-ui/themes/styles.css";
@@ -34,10 +26,6 @@ import { AccountPage } from "./pages/Account";
 import { useEffect, useState } from "react";
 
 import {
-  playCircle,
-  radio,
-  library,
-  search,
   personCircleOutline,
 } from "ionicons/icons";
 
@@ -47,12 +35,39 @@ import ViewRaces from "./pages/races/ViewRacesPage";
 import CreateRace from "./pages/races/CreateRacePage";
 import Race from "./pages/races/RacePage";
 import EachWay from "./pages/races/EachWayPage";
+import ConfirmationPage from "./pages/Confirmation";
 
 setupIonicReact();
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState(null);
+  // const [text, setText] = useState('Hi There');
+
+  const [access, setAccess] = useState();
+  const [refresh, setRefresh] = useState();
+  const router = useIonRouter();
+
+  // useEffect(() => {
+  //     // showLoading()
+  //     const hash = window.location.hash;
+  //     setText(hash)
+  //     const parts = hash.replace('#', '').split('&');
+  //     for (const item of parts) {
+  //         let [key, value] = item.split('=');
+  //         if (key === 'access_token') setAccess(value);
+  //         if (key === 'refresh_token') setRefresh(value);
+  //     }
+  // }, []);
+
+  // useEffect(() => {
+  //     if (!access || !refresh) return;
+  //     const setSessionfunc = async (access_token, refresh_token) => {
+  //         await supabase.auth.setSession({ access_token, refresh_token });
+  //         router.push('/');
+  //     };
+  //     setSessionfunc(access, refresh);
+  // }, [access, refresh]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -94,7 +109,7 @@ const App = () => {
       </div>
     );
   } else if (!session) {
-    return <Login></Login>;
+    return <Login text={'Hello'}></Login>;
   } else {
     return (
       // <Theme>
@@ -129,6 +144,9 @@ const App = () => {
               />
               <Route exact path="/account">
                 <AccountPage />
+              </Route>
+              <Route path="/gizmos">
+                <ConfirmationPage />
               </Route>
             </IonRouterOutlet>
 

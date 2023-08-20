@@ -1,14 +1,25 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../supabaseClient";
+import { Capacitor } from '@capacitor/core';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
 
 export function Login({ text }) {
+
+  const signInWithProvider = async (provider) => {
+    const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100/auth';
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo },
+    });
+    if (error) console.error(error);
+  };
+
+  // Capacitor.getPlatform(); // -> 'web', 'ios' or 'android'
+  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100';
   const handleGoogleSignIn = async () => {
-    supabase.auth.signInWithOAuth({
-      provider: 'google',
-    })
+    signInWithProvider('google')
     // try {
     //   // whatever route you want to deeplink to; make sure to configure in dashboard
     //   // const redirectUri = "your-scheme://login";
@@ -65,7 +76,7 @@ export function Login({ text }) {
               providers={[]}
               // providers={["google", "github", "facebook", "discord"]}
               appearance={{ theme: ThemeSupa }}
-              // redirectTo={"http://localhost:8100"}
+              redirectTo
             />
           </div>
         </div>

@@ -74,32 +74,34 @@ const CreateRace = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent class="ion-padding">
-        <div className="flex items-center flex-wrap flex-row justify-center mt-32">
-          <h1 className="text-xl font-bold w-full block text-center">
-            Create Race
-          </h1>
-          <form onSubmit={(e) => createRace(e, race)}>
-            <IonItem>
-              <IonLabel position="stacked">Name</IonLabel>
-              <IonInput
-                type="text"
-                name="name"
-                value={race.name}
-                onIonChange={(e) =>
-                  setRace({ ...race, name: e.detail.value ?? "" })
-                }
-              ></IonInput>
-            </IonItem>
+        <div className="w-full map-bg pt-8 pb-20 h-full">
+          <div className="flex items-center flex-wrap flex-row justify-center mt-32">
+            <h1 className="text-xl font-bold w-full block text-center">
+              Create Race
+            </h1>
+            <form onSubmit={(e) => createRace(e, race)}>
+              <IonItem>
+                <IonLabel position="stacked">Name</IonLabel>
+                <IonInput
+                  type="text"
+                  name="name"
+                  value={race.name}
+                  onIonChange={(e) =>
+                    setRace({ ...race, name: e.detail.value ?? "" })
+                  }
+                ></IonInput>
+              </IonItem>
 
-            <div className="ion-text-center mt-8">
-              <button
-                type="submit"
-                className="text-white inline-flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-              >
-                Create Race
-              </button>
-            </div>
-          </form>
+              <div className="ion-text-center mt-8">
+                <button
+                  type="submit"
+                  className="text-white bg-gradient-to-r inline-flex items-center from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                >
+                  Create Race
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </IonContent>
     </>

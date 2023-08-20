@@ -108,7 +108,7 @@ const App = () => {
         <span className="sr-only">Loading...</span>
       </div>
     );
-  } else if (!session) {
+  } else if (!session && window.location.pathname != '/auth') {
     return <Login text={'Hello'}></Login>;
   } else {
     return (
@@ -145,7 +145,7 @@ const App = () => {
               <Route exact path="/account">
                 <AccountPage />
               </Route>
-              <Route path="/gizmos">
+              <Route path="/auth">
                 <ConfirmationPage />
               </Route>
             </IonRouterOutlet>

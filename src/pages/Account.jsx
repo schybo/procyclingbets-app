@@ -123,46 +123,52 @@ export function AccountPage() {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Avatar url={profile.avatar_url} onUpload={updateProfile}></Avatar>
-        <form onSubmit={updateProfile}>
-          <IonItem>
-            <IonLabel>
-              <p>Email</p>
-              <p>{session?.user?.email}</p>
-            </IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel position="stacked">Name</IonLabel>
-            <IonInput
-              type="text"
-              name="username"
-              value={profile.username}
-              onIonChange={(e) =>
-                setProfile({ ...profile, username: e.detail.value ?? "" })
-              }
-            ></IonInput>
-          </IonItem>
-          <IonItem>
-            <IonLabel position="stacked">Website</IonLabel>
-            <IonInput
-              type="url"
-              name="website"
-              value={profile.website}
-              onIonChange={(e) =>
-                setProfile({ ...profile, website: e.detail.value ?? "" })
-              }
-            ></IonInput>
-          </IonItem>
-          <div className="ion-text-center">
-            <IonButton fill="clear" type="submit">
-              Update Profile
-            </IonButton>
-          </div>
-        </form>
-        <div className="ion-text-center">
-          <IonButton fill="clear" onClick={signOut}>
-            Log Out
-          </IonButton>
+        <div className="w-full map-bg pt-8 pb-20 h-full">
+          <section className="h-full">
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+              <Avatar url={profile.avatar_url} onUpload={updateProfile}></Avatar>
+              <form onSubmit={updateProfile}>
+                <IonItem>
+                  <IonLabel>
+                    <p>Email</p>
+                    <p>{session?.user?.email}</p>
+                  </IonLabel>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Name</IonLabel>
+                  <IonInput
+                    type="text"
+                    name="username"
+                    value={profile.username}
+                    onIonChange={(e) =>
+                      setProfile({ ...profile, username: e.detail.value ?? "" })
+                    }
+                  ></IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Website</IonLabel>
+                  <IonInput
+                    type="url"
+                    name="website"
+                    value={profile.website}
+                    onIonChange={(e) =>
+                      setProfile({ ...profile, website: e.detail.value ?? "" })
+                    }
+                  ></IonInput>
+                </IonItem>
+                <div className="ion-text-center">
+                  <IonButton fill="clear" type="submit" className="mt-8 text-white bg-gradient-to-r inline-flex items-center from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-1 text-center mr-2 mb-2">
+                    Update Profile
+                  </IonButton>
+                </div>
+              </form>
+              <div className="ion-text-center">
+                <IonButton fill="clear" onClick={signOut}>
+                  Log Out
+                </IonButton>
+              </div>
+            </div>
+          </section>
         </div>
       </IonContent>
     </>

@@ -254,7 +254,8 @@ const Race = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="flex items-center flex-row flex-wrap justify-center mt-12 mb-8 text-center">
+        <div className="w-full map-bg pt-8 pb-20 h-full">
+          <div className="flex items-center flex-row flex-wrap justify-center mt-12 mb-8 text-center">
           <IonText>
             <h1 className="text-xl font-bold mb-2">
               Net: {currencyFormatter.format(totalWon - total)}
@@ -388,6 +389,7 @@ const Race = ({ match }) => {
             <IonIcon icon={add}></IonIcon>
           </IonFabButton>
         </IonFab>
+        </div>
       </IonContent>
     </>
   );

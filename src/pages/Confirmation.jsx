@@ -11,7 +11,7 @@ const ConfirmationPage = () => {
   const router = useIonRouter();
 
   useEffect(() => {
-      showLoading()
+      // showLoading()
       const hash = window.location.hash;
       const parts = hash.replace('#', '').split('&');
       for (const item of parts) {

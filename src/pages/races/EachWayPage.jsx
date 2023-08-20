@@ -158,198 +158,200 @@ const EachWay = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="flex w-full items-center justify-center h-screen mb-32">
-          <IonList>
-            <form onSubmit={(e) => createBet(e, bet)}>
-              <IonItem>
-                <IonLabel position="stacked">Type</IonLabel>
-                <IonSelect
-                  className="bg-gray-50 border border-gray-300 min-h-0 p-1 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-0.5 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                  placeholder="Overall"
-                  value={bet?.type}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, type: e.detail.value ?? 0 })
-                  }
-                >
-                  {betTypes.map((bt) => {
-                    console.log("bt");
-                    console.log(bt);
-                    return (
-                      <IonSelectOption key={bt?.id} value={bt?.id}>
-                        {capitalizeFirstLetter(bt?.type)}
-                      </IonSelectOption>
-                    );
-                  })}
-                </IonSelect>
-              </IonItem>
-
-              {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
+        <div className="w-full map-bg pt-8 pb-20 h-full">
+          <div className="flex w-full items-center justify-center h-full mb-32">
+            <IonList>
+              <form onSubmit={(e) => createBet(e, bet)}>
                 <IonItem>
-                  <IonLabel position="stacked">Rider</IonLabel>
-                  <IonInput
-                    type="text"
-                    name="rider_name"
-                    required={true}
-                    placeholder={"Adam Yates"}
-                    value={bet.rider_name}
+                  <IonLabel position="stacked">Type</IonLabel>
+                  <IonSelect
+                    className="select-icon-fix bg-gray-50 border border-gray-300 p-1 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-0.5 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    placeholder="Overall"
+                    value={bet?.type}
                     onIonChange={(e) =>
-                      setBet({ ...bet, rider_name: e.detail.value ?? "" })
+                      setBet({ ...bet, type: e.detail.value ?? 0 })
                     }
-                  ></IonInput>
+                  >
+                    {betTypes.map((bt) => {
+                      console.log("bt");
+                      console.log(bt);
+                      return (
+                        <IonSelectOption key={bt?.id} value={bt?.id}>
+                          {capitalizeFirstLetter(bt?.type)}
+                        </IonSelectOption>
+                      );
+                    })}
+                  </IonSelect>
                 </IonItem>
-              )}
 
-              {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
-                <IonItem>
-                  <IonLabel position="stacked">Odds</IonLabel>
-                  <IonInput
-                    type="text"
-                    name="rider_odds"
-                    required={true}
-                    placeholder={121.0}
-                    value={bet.rider_odds}
-                    onIonChange={(e) =>
-                      setBet({ ...bet, rider_odds: e.detail.value ?? 0 })
-                    }
-                  ></IonInput>
-                </IonItem>
-              )}
-
-              {bet?.type && bet?.type === BET_TYPE["matchup"] && (
-                <>
+                {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
                   <IonItem>
-                    <IonLabel position="stacked">Matchup Return</IonLabel>
+                    <IonLabel position="stacked">Rider</IonLabel>
                     <IonInput
                       type="text"
-                      name="matchup_return"
+                      name="rider_name"
+                      required={true}
+                      placeholder={"Adam Yates"}
+                      value={bet.rider_name}
+                      onIonChange={(e) =>
+                        setBet({ ...bet, rider_name: e.detail.value ?? "" })
+                      }
+                    ></IonInput>
+                  </IonItem>
+                )}
+
+                {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
+                  <IonItem>
+                    <IonLabel position="stacked">Odds</IonLabel>
+                    <IonInput
+                      type="text"
+                      name="rider_odds"
                       required={true}
                       placeholder={121.0}
-                      value={bet.matchup_return}
+                      value={bet.rider_odds}
                       onIonChange={(e) =>
-                        setBet({ ...bet, matchup_return: e.detail.value ?? 0 })
+                        setBet({ ...bet, rider_odds: e.detail.value ?? 0 })
                       }
                     ></IonInput>
                   </IonItem>
+                )}
 
-                  <IonItem>
-                    <IonLabel position="stacked">Number of Legs</IonLabel>
-                    <IonInput
-                      type="text"
-                      name="matchup_legs"
-                      required={true}
-                      placeholder={3}
-                      value={bet.matchup_legs}
-                      onIonChange={(e) =>
-                        setBet({ ...bet, matchup_legs: e.detail.value ?? 0 })
-                      }
-                    ></IonInput>
-                  </IonItem>
-                </>
-              )}
-
-              <IonItem>
-                <IonLabel position="stacked">Stake</IonLabel>
-                <IonInput
-                  type="text"
-                  name="amount"
-                  required={true}
-                  placeholder={0.3}
-                  value={bet.amount}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, amount: e.detail.value ?? 0 })
-                  }
-                ></IonInput>
-              </IonItem>
-
-              {/* <IonItem>
-                <IonLabel position="stacked">Positions</IonLabel>
-                <IonInput
-                  type="text"
-                  name="each_way_positions"
-                  required={true}
-                  value={bet.each_way_positions}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, each_way_positions: e.detail.value ?? 0 })
-                  }
-                ></IonInput>
-              </IonItem> */}
-
-              {bet?.type &&
-                bet?.type !== BET_TYPE["matchup"] &&
-                bet?.type !== BET_TYPE["top3"] &&
-                bet?.type !== BET_TYPE["top10"] && (
+                {bet?.type && bet?.type === BET_TYPE["matchup"] && (
                   <>
                     <IonItem>
-                      <IonLabel position="stacked">Is Each Way?</IonLabel>
-                      <IonToggle
-                        checked={bet.each_way}
+                      <IonLabel position="stacked">Matchup Return</IonLabel>
+                      <IonInput
+                        type="text"
+                        name="matchup_return"
+                        required={true}
+                        placeholder={121.0}
+                        value={bet.matchup_return}
                         onIonChange={(e) =>
-                          setBet({ ...bet, each_way: !bet.each_way })
+                          setBet({ ...bet, matchup_return: e.detail.value ?? 0 })
                         }
-                      >
-                        Each Way?
-                      </IonToggle>
+                      ></IonInput>
                     </IonItem>
-                    {bet.each_way && (
-                      <IonItem>
-                        <IonLabel position="stacked">Each Way Return</IonLabel>
-                        <IonInput
-                          type="text"
-                          name="each_way_return"
-                          required={true}
-                          value={bet.each_way_return}
-                          onIonChange={(e) =>
-                            setBet({
-                              ...bet,
-                              each_way_return: e.detail.value ?? 0,
-                            })
-                          }
-                        ></IonInput>
-                      </IonItem>
-                    )}
+
+                    <IonItem>
+                      <IonLabel position="stacked">Number of Legs</IonLabel>
+                      <IonInput
+                        type="text"
+                        name="matchup_legs"
+                        required={true}
+                        placeholder={3}
+                        value={bet.matchup_legs}
+                        onIonChange={(e) =>
+                          setBet({ ...bet, matchup_legs: e.detail.value ?? 0 })
+                        }
+                      ></IonInput>
+                    </IonItem>
                   </>
                 )}
-              <IonItem>
-                <IonLabel position="stacked">Live Bet?</IonLabel>
-                <IonToggle
-                  checked={bet.live_bet}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, live_bet: !bet.live_bet })
-                  }
-                >
-                  Live Bet?
-                </IonToggle>
-              </IonItem>
 
-              <IonItem>
-                <IonLabel position="stacked">Synthetic?</IonLabel>
-                <IonToggle
-                  checked={bet.synthetic}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, synthetic: !bet.synthetic })
-                  }
-                >
-                  Synthetic?
-                </IonToggle>
-              </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Stake</IonLabel>
+                  <IonInput
+                    type="text"
+                    name="amount"
+                    required={true}
+                    placeholder={0.3}
+                    value={bet.amount}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, amount: e.detail.value ?? 0 })
+                    }
+                  ></IonInput>
+                </IonItem>
 
-              <IonItem>
-                <IonLabel position="stacked">Time Trial?</IonLabel>
-                <IonToggle
-                  checked={bet.time_trial}
-                  onIonChange={(e) =>
-                    setBet({ ...bet, time_trial: !bet.time_trial })
-                  }
-                >
-                  Time Trial?
-                </IonToggle>
-              </IonItem>
+                {/* <IonItem>
+                  <IonLabel position="stacked">Positions</IonLabel>
+                  <IonInput
+                    type="text"
+                    name="each_way_positions"
+                    required={true}
+                    value={bet.each_way_positions}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, each_way_positions: e.detail.value ?? 0 })
+                    }
+                  ></IonInput>
+                </IonItem> */}
 
-              <div className="ion-text-center mt-8">
-                <IonButton type="submit">Create Bet</IonButton>
-              </div>
-            </form>
-          </IonList>
+                {bet?.type &&
+                  bet?.type !== BET_TYPE["matchup"] &&
+                  bet?.type !== BET_TYPE["top3"] &&
+                  bet?.type !== BET_TYPE["top10"] && (
+                    <>
+                      <IonItem>
+                        <IonLabel position="stacked">Is Each Way?</IonLabel>
+                        <IonToggle
+                          checked={bet.each_way}
+                          onIonChange={(e) =>
+                            setBet({ ...bet, each_way: !bet.each_way })
+                          }
+                        >
+                          Each Way?
+                        </IonToggle>
+                      </IonItem>
+                      {bet.each_way && (
+                        <IonItem>
+                          <IonLabel position="stacked">Each Way Return</IonLabel>
+                          <IonInput
+                            type="text"
+                            name="each_way_return"
+                            required={true}
+                            value={bet.each_way_return}
+                            onIonChange={(e) =>
+                              setBet({
+                                ...bet,
+                                each_way_return: e.detail.value ?? 0,
+                              })
+                            }
+                          ></IonInput>
+                        </IonItem>
+                      )}
+                    </>
+                  )}
+                <IonItem>
+                  <IonLabel position="stacked">Live Bet?</IonLabel>
+                  <IonToggle
+                    checked={bet.live_bet}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, live_bet: !bet.live_bet })
+                    }
+                  >
+                    Live Bet?
+                  </IonToggle>
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel position="stacked">Synthetic?</IonLabel>
+                  <IonToggle
+                    checked={bet.synthetic}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, synthetic: !bet.synthetic })
+                    }
+                  >
+                    Synthetic?
+                  </IonToggle>
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel position="stacked">Time Trial?</IonLabel>
+                  <IonToggle
+                    checked={bet.time_trial}
+                    onIonChange={(e) =>
+                      setBet({ ...bet, time_trial: !bet.time_trial })
+                    }
+                  >
+                    Time Trial?
+                  </IonToggle>
+                </IonItem>
+
+                <div className="ion-text-center mt-8">
+                  <button type="submit" className="text-white bg-gradient-to-r inline-flex items-center from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2">Create Bet</button>
+                </div>
+              </form>
+            </IonList>
+          </div>
         </div>
       </IonContent>
     </>

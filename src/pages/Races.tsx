@@ -28,7 +28,7 @@ const Races = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="w-full map-bg pt-8 pb-20 h-fit">
+        <div className="w-full map-bg pt-8 pb-20 h-full">
           <ViewRaces></ViewRaces>
         </div>
         <IonFab

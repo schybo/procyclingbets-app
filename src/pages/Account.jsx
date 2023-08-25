@@ -123,7 +123,7 @@ export function AccountPage() {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="w-full map-bg pt-8 pb-20 h-full">
+        <div className="w-full pt-8 pb-20 h-full">
           <section className="h-full">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
               <Avatar url={profile.avatar_url} onUpload={updateProfile}></Avatar>

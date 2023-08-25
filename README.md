@@ -140,6 +140,7 @@ cd android &&
 <!-- FOR ABB -->
 ./gradlew bundleRelease &&
 cd app/build/outputs/apk/release &&
+cd app/build/outputs/bundle/release
 
 java -jar keys/pepk.jar --keystore=pcb.keystore --alias=pcb --output=output.zip --include-cert --rsa-aes-encryption --encryption-key-path=/Users/brentscheibelhut/procyclingbets-app/keys/encryption_public_key.pem
 

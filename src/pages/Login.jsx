@@ -17,7 +17,6 @@ export function Login({ text }) {
   };
 
   // Capacitor.getPlatform(); // -> 'web', 'ios' or 'android'
-  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100';
   const handleGoogleSignIn = async () => {
     signInWithProvider('google')
     // try {
@@ -49,6 +48,9 @@ export function Login({ text }) {
     // }
   };
 
+  const providers = Capacitor.getPlatform() === 'web' ? ['google'] : []
+  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100';
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900 h-full">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
@@ -73,10 +75,10 @@ export function Login({ text }) {
           <div className="p-6 space-y-4 md:space">
             <Auth
               supabaseClient={supabase}
-              providers={[]}
+              providers={providers}
               // providers={["google", "github", "facebook", "discord"]}
               appearance={{ theme: ThemeSupa }}
-              redirectTo
+              redirectTo={redirectTo}
             />
           </div>
         </div>

@@ -104,7 +104,7 @@ const DashboardPage = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="w-full map-bg pt-8 pb-20 h-full">
+        <div className="pt-8 pb-20">
           <div className="mt-20 mb-32 w-full flex flex-row flex-wrap items-center justify-center">
             <div className="w-full text-xl font-bold block text-center mb-8">
               Betting Performance

@@ -38,6 +38,7 @@ export const BET_TYPE = {
   matchup: 5,
   top3: 6,
   top10: 7,
+  custom: 9
 };
 
 export const convertToEnglish = (string) => {

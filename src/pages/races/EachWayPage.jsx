@@ -36,6 +36,7 @@ const EachWay = ({ match }) => {
     each_way_positions: 3,
     status: 5,
     type: 1,
+    custom_type: null,
     race_id: match.params.id,
     matchup_return: null,
     matchup_legs: null,
@@ -158,14 +159,14 @@ const EachWay = ({ match }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="w-full map-bg pt-8 pb-20 h-full">
-          <div className="flex w-full items-center justify-center h-full mb-32">
+        <div className="pt-8 pb-20">
+          <div className="flex w-full items-center justify-center h-full">
             <IonList>
               <form onSubmit={(e) => createBet(e, bet)}>
                 <IonItem>
                   <IonLabel position="stacked">Type</IonLabel>
                   <IonSelect
-                    className="select-icon-fix bg-gray-50 border border-gray-300 p-1 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-0.5 px-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    className="select-icon-fix"
                     placeholder="Overall"
                     value={bet?.type}
                     onIonChange={(e) =>
@@ -183,6 +184,22 @@ const EachWay = ({ match }) => {
                     })}
                   </IonSelect>
                 </IonItem>
+
+                {bet?.type && bet?.type === BET_TYPE["custom"] && (
+                  <IonItem>
+                    <IonLabel position="stacked">Custom Type</IonLabel>
+                    <IonInput
+                      type="text"
+                      name="custom_type"
+                      required={true}
+                      placeholder={'Straight Forecast'}
+                      value={bet.custom_type}
+                      onIonChange={(e) =>
+                        setBet({ ...bet, custom_type: e.detail.value ?? 0 })
+                      }
+                    ></IonInput>
+                  </IonItem>
+                )}
 
                 {bet?.type && bet?.type !== BET_TYPE["matchup"] && (
                   <IonItem>
@@ -278,7 +295,8 @@ const EachWay = ({ match }) => {
                 {bet?.type &&
                   bet?.type !== BET_TYPE["matchup"] &&
                   bet?.type !== BET_TYPE["top3"] &&
-                  bet?.type !== BET_TYPE["top10"] && (
+                  bet?.type !== BET_TYPE["top10"] &&
+                  bet?.type !== BET_TYPE["custom"] && (
                     <>
                       <IonItem>
                         <IonLabel position="stacked">Is Each Way?</IonLabel>

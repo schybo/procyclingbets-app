@@ -74,7 +74,7 @@ const CreateRace = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent class="ion-padding">
-        <div className="w-full map-bg pt-8 pb-20 h-full">
+        <div className="pt-8 pb-20">
           <div className="flex items-center flex-wrap flex-row justify-center mt-32">
             <h1 className="text-xl font-bold w-full block text-center">
               Create Race

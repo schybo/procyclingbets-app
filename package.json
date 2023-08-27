@@ -7,6 +7,7 @@
     "@capacitor/camera": "^5.0.6",
     "@capacitor/core": "^5.2.2",
     "@capacitor/ios": "^5.2.2",
+    "@codetrix-studio/capacitor-google-auth": "^3.1.4",
     "@ionic/pwa-elements": "^3.2.2",
     "@ionic/react": "^7.2.3",
     "@ionic/react-router": "^7.2.3",
@@ -60,7 +61,8 @@
     "build:css": "postcss tailwind.css -o src/theme/tailwind.css",
     "watch:css": "postcss tailwind.css -o src/theme/tailwind.css -w",
     "start:dev:ios": "yarn watch:css & ionic capacitor run ios -l --external",
-    "start:dev": "yarn watch:css & ionic serve"
+    "start:dev": "yarn watch:css & ionic serve",
+    "release:android": "cd android && ./gradlew bundleRelease && cd app/build/outputs/bundle/release && jarsigner -keystore /Users/brentscheibelhut/procyclingbets-app/pcb.keystore app-release.aab pcb && cp app-release.aab /Users/brentscheibelhut/procyclingbets-app/releases/"
   },
   "eslintConfig": {
     "extends": [

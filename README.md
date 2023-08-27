@@ -133,6 +133,13 @@ Supabase is open source. We'd love for you to follow along and get involved at h
 
 # Releasing for Android
 
+Remember to update versionCode and versionName in `build.gradle`
+
+```
+versionCode 3
+versionName "1.2"
+```
+
 ```
 cd android &&
 <!-- FOR JUST APK -->

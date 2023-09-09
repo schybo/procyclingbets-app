@@ -16,7 +16,7 @@ export function Login({ text }) {
   //   clientId: clientId,
   //   scopes: ['profile', 'email']
   // });
-  GoogleAuth.initialize()
+  // GoogleAuth.initialize()
 
   const router = useIonRouter();
   const signInWithProvider = async (provider) => {
@@ -71,9 +71,14 @@ export function Login({ text }) {
     // }
   };
 
+  console.log(process.env.REACT_APP_WEB_URL)
   const providers = Capacitor.getPlatform() === 'web' ? ['google'] : []
-  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100';
+  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : process.env.REACT_APP_WEB_URL;
   const isAndroid = Capacitor.getPlatform() === 'android'
+
+  if (isAndroid) {
+    GoogleAuth.initialize()
+  }
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 h-full">

@@ -5,4 +5,5 @@
     <string name="package_name">com.procyclingbets.app</string>
     <string name="custom_url_scheme">com.procyclingbets.app</string>
     <string name="filter_view_pcb_auth">com.procyclingbets.app</string>
+    <string name="server_client_id">105848017008-d024o69dleuo1jkir4v67v2p009dicmp.apps.googleusercontent.com</string>
 </resources>

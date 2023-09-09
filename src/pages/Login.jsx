@@ -12,10 +12,11 @@ let clientId = Capacitor.getPlatform() === 'android' ? '105848017008-81jl6dttjr5
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
 
 export function Login({ text }) {
-  GoogleAuth.initialize({
-    clientId: clientId,
-    scopes: ['profile', 'email']
-  });
+  // GoogleAuth.initialize({
+  //   clientId: clientId,
+  //   scopes: ['profile', 'email']
+  // });
+  GoogleAuth.initialize()
 
   const router = useIonRouter();
   const signInWithProvider = async (provider) => {
@@ -32,6 +33,7 @@ export function Login({ text }) {
     // use hook after platform dom ready
 
     // signInWithProvider('google')
+    console.log("I pressed the button")
     let googleUser = await GoogleAuth.signIn();
     console.log("GOOGLE USER")
     console.log(googleUser)
@@ -71,6 +73,7 @@ export function Login({ text }) {
 
   const providers = Capacitor.getPlatform() === 'web' ? ['google'] : []
   const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100';
+  const isAndroid = Capacitor.getPlatform() === 'android'
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 h-full">
@@ -87,11 +90,16 @@ export function Login({ text }) {
           />
           Pro Cycling Bets
         </a>
-        {/* <div><button
-          type="button"
-          onClick={() => handleGoogleSignIn()}
-          className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
-        >Hello 1</button></div> */}
+        { isAndroid && (
+          <div>
+            <button
+              type="button"
+              onClick={() => handleGoogleSignIn()}
+              className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            >Hello 1</button>
+          </div>
+          )
+        }
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space">
             <Auth

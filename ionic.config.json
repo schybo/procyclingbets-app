@@ -1,7 +1,13 @@
 {
-  "name": "supabase-ionic-react",
+  "name": "com.procyclingbets.app",
   "integrations": {
     "capacitor": {}
   },
-  "type": "react"
+  "type": "react",
+  "appId": "com.procyclingbets.app",
+  "webDir": "build",
+  "scheme": "com.procyclingbets.app",
+  "deepLinks": {
+    "scheme": "com.procyclingbets.app"
+  }
 }

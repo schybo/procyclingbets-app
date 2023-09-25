@@ -28,6 +28,18 @@ export function Login({ text }) {
     if (error) console.error(error);
   };
 
+  const loginWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        }
+      },
+    });
+  }
+
   // Capacitor.getPlatform(); // -> 'web', 'ios' or 'android'
   const handleGoogleSignIn = async () => {
     // use hook after platform dom ready
@@ -99,7 +111,8 @@ export function Login({ text }) {
           <div>
             <button
               type="button"
-              onClick={() => handleGoogleSignIn()}
+              // onClick={() => handleGoogleSignIn()}
+              onClick={() => loginWithGoogle()}
               className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >Hello 1</button>
           </div>

@@ -7,4 +7,12 @@ const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY as string
 //     flowType: 'pkce',
 // }})
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const options = {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, options)

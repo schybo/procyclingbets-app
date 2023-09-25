@@ -36,10 +36,12 @@ import CreateRace from "./pages/races/CreateRacePage";
 import Race from "./pages/races/RacePage";
 import EachWay from "./pages/races/EachWayPage";
 import ConfirmationPage from "./pages/Confirmation";
+import { App } from '@capacitor/app';
+// import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 
 setupIonicReact();
 
-const App = () => {
+const PcbApp = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState(null);
   // const [text, setText] = useState('Hi There');
@@ -68,6 +70,42 @@ const App = () => {
   //     };
   //     setSessionfunc(access, refresh);
   // }, [access, refresh]);
+
+  useEffect(() => {
+    App.addListener("appUrlOpen", async (data) => {
+      console.log('opened app url');
+      console.log(data);
+      console.log('that happened');
+    
+      const url = new URL(data.url);
+      const hashParams = new URLSearchParams(url.hash.substring(1)); // Remove the '#' at the start of the hash
+    
+      const access_token = hashParams.get('access_token');
+      const refresh_token = hashParams.get('refresh_token');
+      const expires_in = hashParams.get('expires_in');
+      const token_type = hashParams.get('token_type');
+    
+      if (access_token && refresh_token && expires_in && token_type) {
+        // Set the session
+        const { data: session, error } = await supabase.auth.setSession({
+          access_token,
+          refresh_token,
+          expires_in,
+          token_type
+        });
+    
+        if (error) {
+          console.error('Error during setting session:', error);
+        } else {
+          console.log('Session:', session);
+          // Fetch and store the user data
+          const user = session.user;
+          // await SecureStoragePlugin.set({ key: 'user', value: JSON.stringify(user) });
+          setSession(session);
+        }
+      }
+    });
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -174,4 +212,4 @@ const App = () => {
   }
 };
 
-export default App;
+export default PcbApp;

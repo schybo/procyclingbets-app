@@ -18,12 +18,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="@string/filter_view_pcb_auth">
+            <intent-filter android:label="@string/filter_view_pcb_auth" android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "com.procyclingbets.app://auth” -->
-                <data android:scheme="com.procyclingbets.app" android:host="auth" />
+                <!-- <data android:scheme="com.procyclingbets.app" android:host="auth" /> -->
+                <data android:scheme="com.procyclingbets.app"/>
             </intent-filter>
         </activity>
 

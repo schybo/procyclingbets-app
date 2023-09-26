@@ -1,6 +1,7 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../supabaseClient";
+import { IonIcon } from "@ionic/react";
 import { Capacitor } from '@capacitor/core';
 import {
   useIonRouter,
@@ -20,7 +21,7 @@ export function Login({ text }) {
 
   const router = useIonRouter();
   const signInWithProvider = async (provider) => {
-    const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : 'http://localhost:8100/auth';
+    const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://loginWithGoogle' : `${process.env.REACT_APP_WEB_URL}`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo },
@@ -32,6 +33,7 @@ export function Login({ text }) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
+        redirectTo,
         queryParams: {
           access_type: "offline",
           prompt: "consent",
@@ -85,7 +87,7 @@ export function Login({ text }) {
 
   console.log(process.env.REACT_APP_WEB_URL)
   const providers = Capacitor.getPlatform() === 'web' ? ['google'] : []
-  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://auth' : process.env.REACT_APP_WEB_URL;
+  const redirectTo = Capacitor.getPlatform() === 'android' ? 'com.procyclingbets.app://loginWithGoogle' : process.env.REACT_APP_WEB_URL;
   const isAndroid = Capacitor.getPlatform() === 'android'
 
   if (isAndroid) {
@@ -107,19 +109,19 @@ export function Login({ text }) {
           />
           Pro Cycling Bets
         </a>
-        { isAndroid && (
-          <div>
-            <button
-              type="button"
-              // onClick={() => handleGoogleSignIn()}
-              onClick={() => loginWithGoogle()}
-              className="text-white bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
-            >Hello 1</button>
-          </div>
-          )
-        }
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space">
+            { isAndroid && (
+              <div>
+                <button
+                  type="button"
+                  // onClick={() => handleGoogleSignIn()}
+                  onClick={() => loginWithGoogle()}
+                  className="supabase-auth-ui_ui-button c-egTDuJ c-egTDuJ-iwjZXY-color-default inline-flex items-center focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                ><IonIcon src="assets/svgs/google.svg" />Sign in with Google</button>
+              </div>
+              )
+            }
             <Auth
               supabaseClient={supabase}
               providers={providers}

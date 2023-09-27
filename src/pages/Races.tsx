@@ -18,8 +18,11 @@ import {
   add,
 } from "ionicons/icons";
 import ViewRaces from "./races/ViewRacesPage";
+import { useState } from "react";
 
 const Races = () => {
+  const [viewState, setViewState] = useState('active');
+
   return (
     <>
       <IonHeader>
@@ -28,8 +31,28 @@ const Races = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+          <ul className="flex flex-wrap -mb-px items-center w-full block justify-center">
+            <li className="inline-block mr-2">
+              <button
+                onClick={() => setViewState('active')}
+                className={`inline-block p-4 border-b-2 border-solid rounded-t-lg ${viewState == 'active' ? 'active text-blue-600 border-blue-600' : 'border-transparent hover:text-gray-600 hover:border-gray-300'}`}
+              >
+                Active
+              </button>
+            </li>
+            <li className="inline-block mr-2">
+              <button
+                onClick={() => setViewState('archived')}
+                className={`inline-block p-4 border-b-2 border-solid rounded-t-lg ${viewState == 'archived' ? 'active text-blue-600 border-blue-600' : 'border-transparent hover:text-gray-600 hover:border-gray-300'}`}
+              >
+                Archived
+              </button>
+            </li>
+          </ul>
+        </div>
         <div className="pt-4 pb-20">
-          <ViewRaces></ViewRaces>
+          <ViewRaces viewState={viewState}></ViewRaces>
         </div>
         <IonFab
           className="mb-16"

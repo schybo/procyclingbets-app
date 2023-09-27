@@ -22,7 +22,7 @@ import {
 } from "../../helpers/helpers";
 import LoadingCard from "../../components/LoadingCard";
 import Dropdown from "../../components/Dropdown";
-import { EyeIcon } from "@heroicons/react/20/solid";
+import { EyeIcon, FlagIcon } from "@heroicons/react/20/solid";
 
 const ViewRaces = ({viewState}) => {
   const [showLoading, hideLoading] = useIonLoading();
@@ -210,15 +210,17 @@ const ViewRaces = ({viewState}) => {
                 <IonCard
                   color="light"
                   key={`race-${r?.id}`}
-                  className="w-full md:w-64 h-64 mx-6 flex flex-row items-center text-ellipsis bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-                >
-                  <div className="flex flex-col justify-between px-4 pt-4 leading-normal w-full">
+                  className="w-full md:w-64 h-60 mx-6 flex flex-row items-center text-ellipsis bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl">
+                  <div className="flex flex-col justify-between px-4 leading-normal w-full">
                     <div className="header flex justify-between">
                       <div className="text-lg font-bold truncate">
                         <a href={`/race/view/${r.id}`}>
-                          <h5 className="mb-2 text-2xl font-bold truncate tracking-tight text-gray-900 dark:text-white">
-                            {r?.name}
-                          </h5>
+                          <div className="flex flex-row items-center mb-2">
+                            <FlagIcon className="h-6 mr-2"></FlagIcon>
+                            <h5 className="text-2xl font-bold truncate tracking-tight text-gray-900 dark:text-white">
+                              {r?.name}
+                            </h5>
+                          </div>
                         </a>
                       </div>
                       <div className="ml-2">

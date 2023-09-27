@@ -10,6 +10,7 @@ import {
   currencyFormatter,
   BET_STATUS,
 } from "../helpers/helpers";
+import { CurrencyDollarIcon } from "@heroicons/react/20/solid";
 
 const DashboardPage = () => {
   // const [showLoading, hideLoading] = useIonLoading();
@@ -106,6 +107,7 @@ const DashboardPage = () => {
       <IonContent>
         <div className="pt-8 pb-20">
           <div className="mt-20 mb-32 w-full flex flex-row flex-wrap items-center justify-center">
+            <CurrencyDollarIcon className="h-16 mb-4"></CurrencyDollarIcon>
             <div className="w-full text-xl font-bold block text-center mb-8">
               Betting Performance
             </div>

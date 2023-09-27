@@ -52,6 +52,7 @@ const Race = ({ match }) => {
   const [ridersInfo, setRidersInfo] = useState();
   const [betTypes, setTypes] = useState([]);
   const [eachWayBets, setEachWayBets] = useState([]);
+  const [viewState, setViewState] = useState('all');
 
   useEffect(() => {
     getRaceAndBets();
@@ -255,8 +256,8 @@ const Race = ({ match }) => {
       </IonHeader>
       <IonContent>
         <div className="pt-8 pb-16">
-          <div className="flex items-center flex-row flex-wrap justify-center mb-8 text-center">
-            <IonText>
+          <div className="flex items-center flex-col flex-wrap justify-center mb-8 text-center">
+            <IonText className="block">
               <h1 className="text-xl font-bold mb-2">
                 Net: {currencyFormatter.format(totalWon - total)}
               </h1>
@@ -273,8 +274,32 @@ const Race = ({ match }) => {
                 Total Open: {currencyFormatter.format(totalOpen)}
               </h2>
             </IonText>
+            <div className="block mt-6 w-[90%] text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+              <ul className="flex flex-wrap -mb-px items-center w-full block justify-center">
+                <li className="inline-block mr-2">
+                  <button
+                    onClick={() => setViewState('all')}
+                    className={`inline-block p-4 border-b-2 border-solid rounded-t-lg ${viewState == 'all' ? 'active text-blue-600 border-blue-600' : 'border-transparent hover:text-gray-600 hover:border-gray-300'}`}
+                  >
+                    All
+                  </button>
+                </li>
+                <li className="inline-block mr-2">
+                  <button
+                    onClick={() => setViewState('open')}
+                    className={`inline-block p-4 border-b-2 border-solid rounded-t-lg ${viewState == 'open' ? 'active text-blue-600 border-blue-600' : 'border-transparent hover:text-gray-600 hover:border-gray-300'}`}
+                  >
+                    Open
+                  </button>
+                </li>
+              </ul>
+            </div>
             <div className="w-full flex flex-row flex-wrap items-center justify-center mt-6">
               {eachWayBets.map((ew) => {
+                if (viewState == "open" && ew.status != 'open') {
+                  return
+                }
+
                 console.log("Rider name");
                 console.log(kebabCase(ew?.rider_name));
                 let image = `https://www.procyclingstats.com/${

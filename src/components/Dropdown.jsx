@@ -7,10 +7,10 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Dropdown({ raceId, deleteRace, archiveRace }) {
+export default function Dropdown({ race, deleteRace, archiveToggle }) {
     const router = useIonRouter();
-    console.log("RACE ID")
-    console.log(raceId)
+    console.log("RACE")
+    console.log(race)
 
     return (
         <Menu as="div" className="relative inline-block text-left">
@@ -36,7 +36,7 @@ export default function Dropdown({ raceId, deleteRace, archiveRace }) {
                         <button
                             onClick={() =>
                                 router.push(
-                                    `/race/view/${raceId}`,
+                                    `/race/view/${race.id}`,
                                     "forward",
                                     "replace"
                                 )
@@ -54,7 +54,7 @@ export default function Dropdown({ raceId, deleteRace, archiveRace }) {
                 <Menu.Item>
                     {({ active }) => (
                     <button
-                        onClick={() => deleteRace(raceId)}
+                        onClick={() => deleteRace(race.id)}
                         className={classNames(
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'block px-4 py-2 text-sm flex flex-row items-center'
@@ -70,14 +70,14 @@ export default function Dropdown({ raceId, deleteRace, archiveRace }) {
                 <Menu.Item>
                     {({ active }) => (
                     <button
-                        onClick={() => archiveRace(raceId)}
+                        onClick={() => archiveToggle(race)}
                         className={classNames(
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'block px-4 py-2 text-sm flex flex-row items-center'
                         )}
                     >
                         <ArchiveBoxIcon className='mr-2 h-4'></ArchiveBoxIcon>
-                        Archive
+                        { race.archived ? "Unarchive" : "Archive" }
                     </button>
                     )}
                 </Menu.Item>

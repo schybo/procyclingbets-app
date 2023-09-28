@@ -172,13 +172,13 @@ const ViewRaces = ({viewState}) => {
     }
   };
 
-  const archiveRace = async (raceId) => {
+  const archiveToggle = async (race) => {
     await showLoading();
     try {
       let { error, status } = await supabase
         .from("races")
-        .update({ archived: true })
-        .eq("id", raceId);
+        .update({ archived: !race.archived })
+        .eq("id", race.id);
 
       if (error && status !== 406) {
         throw error;
@@ -224,7 +224,7 @@ const ViewRaces = ({viewState}) => {
                         </a>
                       </div>
                       <div className="ml-2">
-                        <Dropdown raceId={r?.id} deleteRace={deleteRace} archiveRace={archiveRace}></Dropdown>
+                        <Dropdown race={r} deleteRace={deleteRace} archiveToggle={archiveToggle}></Dropdown>
                       </div>
                     </div>
                     <div>

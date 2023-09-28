@@ -216,7 +216,7 @@ const ViewRaces = ({viewState}) => {
                       <div className="text-lg font-bold truncate">
                         <a href={`/race/view/${r.id}`}>
                           <div className="flex flex-row items-center mb-2">
-                            <FlagIcon className="h-6 mr-2"></FlagIcon>
+                            <img src="assets/svgs/cycling-colored.svg" className="h-7 mr-2"></img>
                             <h5 className="text-2xl font-bold truncate tracking-tight text-gray-900 dark:text-white">
                               {r?.name}
                             </h5>

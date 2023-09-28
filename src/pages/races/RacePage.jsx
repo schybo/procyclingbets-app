@@ -35,6 +35,7 @@ import {
 } from "../../helpers/helpers";
 import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
 import { add } from "ionicons/icons";
+import { TrashIcon } from "@heroicons/react/20/solid";
 
 const Race = ({ match }) => {
   console.log("MATCH");
@@ -249,9 +250,10 @@ const Race = ({ match }) => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>{race?.name}</IonTitle>
+      <IonHeader className="flex flex-row items-center justify-center">
+        <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
+        <IonToolbar className="inline-block">
+          <IonTitle className="mx-0 px-0 h-8">{race?.name}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -309,7 +311,7 @@ const Race = ({ match }) => {
                   <IonCard
                     color="light"
                     key={`bet-${ew?.id}`}
-                    className="w-full md:w-64 mx-6 h-60 flex flex-row items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    className="w-full md:w-64 px-4 mx-6 h-60 flex flex-row items-center justify-around bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
                   >
                     {/* TODO: Placeholder */}
                     {ew?.type != BET_TYPE["matchup"] ? (
@@ -331,7 +333,7 @@ const Race = ({ match }) => {
                         alt=""
                       ></img>
                     )}
-                    <div className="w-40 flex flex-col justify-between p-4 leading-normal">
+                    <div className="w-40 flex flex-col items-start justify-between p-4 leading-normal">
                       <div className="text-lg font-bold overflow-hidden truncate">
                         {ew?.type == BET_TYPE["matchup"]
                           ? "Matchup"
@@ -380,22 +382,9 @@ const Race = ({ match }) => {
                       <button
                         type="button"
                         onClick={() => deleteBet(ew?.id)}
-                        className="text-white w-24 bg-gradient-to-r inline-flex items-center from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-1 text-center mr-2 mb-2 mt-2"
+                        className="mt-4 text-gray-600 border-solid w-24 flex flex-row items-center justify-start border border-grey-100 rounded-md focus:ring-4 focus:outline-none focus:ring-red-300 font-medium py-1 text-center mr-2 mb-2 mt-2"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-3.5 h-3.5 mr-2"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                          />
-                        </svg>
+                        <TrashIcon className="h-4 mr-2 ml-2 text-gray-600"></TrashIcon>
                         Delete
                       </button>
                     </div>

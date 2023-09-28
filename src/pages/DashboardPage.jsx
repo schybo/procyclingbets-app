@@ -99,15 +99,16 @@ const DashboardPage = () => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Dashboard</IonTitle>
+      <IonHeader className="flex flex-row items-center justify-center">
+        <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
+        <IonToolbar className="inline-block">
+          <IonTitle className="mx-0 px-0 h-8">Dashboard</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <div className="pt-8 pb-20">
           <div className="mt-20 mb-32 w-full flex flex-row flex-wrap items-center justify-center">
-            <CurrencyDollarIcon className="h-16 mb-4"></CurrencyDollarIcon>
+            <img src="assets/svgs/cycling-colored.svg" className="h-16 mb-4"></img>
             <div className="w-full text-xl font-bold block text-center mb-8">
               Betting Performance
             </div>

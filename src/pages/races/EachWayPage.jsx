@@ -153,9 +153,10 @@ const EachWay = ({ match }) => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Add Each Way Bet</IonTitle>
+      <IonHeader className="flex flex-row items-center justify-center">
+        <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
+        <IonToolbar className="inline-block">
+          <IonTitle className="mx-0 px-0 h-8">Add Bet</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>

@@ -146,17 +146,6 @@ export function AccountPage() {
                     }
                   ></IonInput>
                 </IonItem>
-                <IonItem>
-                  <IonLabel position="stacked">Website</IonLabel>
-                  <IonInput
-                    type="url"
-                    name="website"
-                    value={profile.website}
-                    onIonChange={(e) =>
-                      setProfile({ ...profile, website: e.detail.value ?? "" })
-                    }
-                  ></IonInput>
-                </IonItem>
                 <div className="ion-text-center">
                   <IonButton fill="clear" type="submit" className="mt-8 text-white bg-gradient-to-r inline-flex items-center from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-5 py-1 text-center mr-2 mb-2">
                     Update Profile

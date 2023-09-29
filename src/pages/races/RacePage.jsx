@@ -1,27 +1,19 @@
-import React from "react";
 import {
-  IonBackButton,
-  IonButtons,
-  IonButton,
   IonHeader,
   IonContent,
   IonToolbar,
   IonTitle,
-  IonRouterLink,
   IonText,
   IonSelect,
   IonSelectOption,
   useIonRouter,
 } from "@ionic/react";
-import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import {
   IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
 } from "@ionic/react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import {
@@ -40,6 +32,9 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 const Race = ({ match }) => {
   console.log("MATCH");
   console.log(match.params);
+
+  ChartJS.register(ArcElement, Tooltip, Legend);
+
   const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
@@ -248,6 +243,71 @@ const Race = ({ match }) => {
     }
   };
 
+  function valueOrDefault(value, defaultValue) {
+    return typeof value === 'undefined' ? defaultValue : value;
+  }
+
+  var _seed = Date.now();
+
+  function srand(seed) {
+    _seed = seed;
+  }
+
+  function rand(min, max) {
+    min = valueOrDefault(min, 0);
+    max = valueOrDefault(max, 0);
+    _seed = (_seed * 9301 + 49297) % 233280;
+    return min + (_seed / 233280) * (max - min);
+  }
+
+  const CHART_COLORS = {
+    red: 'rgb(255, 99, 132)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    blue: 'rgb(54, 162, 235)',
+    purple: 'rgb(153, 102, 255)',
+    grey: 'rgb(201, 203, 207)'
+  };
+
+  function numbers(config) {
+    var cfg = config || {};
+    var min = valueOrDefault(cfg.min, 0);
+    var max = valueOrDefault(cfg.max, 100);
+    var from = valueOrDefault(cfg.from, []);
+    var count = valueOrDefault(cfg.count, 8);
+    var decimals = valueOrDefault(cfg.decimals, 8);
+    var continuity = valueOrDefault(cfg.continuity, 1);
+    var dfactor = Math.pow(10, decimals) || 0;
+    var data = [];
+    var i, value;
+  
+    for (i = 0; i < count; ++i) {
+      value = (from[i] || 0) + rand(min, max);
+      if (rand() <= continuity) {
+        data.push(Math.round(dfactor * value) / dfactor);
+      } else {
+        data.push(null);
+      }
+    }
+  
+    return data;
+  }
+
+  const DATA_COUNT = 5;
+  const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
+
+  const data = {
+    labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: numbers(NUMBER_CFG),
+        backgroundColor: Object.values(CHART_COLORS),
+      }
+    ]
+  };
+
   return (
     <>
       <IonHeader className="flex flex-row items-center justify-center">
@@ -259,6 +319,9 @@ const Race = ({ match }) => {
       <IonContent>
         <div className="pt-8 pb-16">
           <div className="flex items-center flex-col flex-wrap justify-center mb-8 text-center">
+            <div className="block">
+              <Doughnut data={data} />
+            </div>
             <IonText className="block">
               <h1 className="text-xl font-bold mb-2">
                 Net: {currencyFormatter.format(totalWon - total)}

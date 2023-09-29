@@ -24,16 +24,21 @@ import {
   kebabCase,
   BET_TYPE,
   countEachWay,
+  CHART_COLORS,
+  numbers,
+  rand,
+  valueOrDefault,
+  srand,
 } from "../../helpers/helpers";
 import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
 import { add } from "ionicons/icons";
 import { TrashIcon } from "@heroicons/react/20/solid";
 
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 const Race = ({ match }) => {
   console.log("MATCH");
   console.log(match.params);
-
-  ChartJS.register(ArcElement, Tooltip, Legend);
 
   const router = useIonRouter();
   const [showLoading, hideLoading] = useIonLoading();
@@ -49,6 +54,8 @@ const Race = ({ match }) => {
   const [betTypes, setTypes] = useState([]);
   const [eachWayBets, setEachWayBets] = useState([]);
   const [viewState, setViewState] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+  const [perfData, setPerfData] = useState(null)
 
   useEffect(() => {
     getRaceAndBets();
@@ -61,6 +68,16 @@ const Race = ({ match }) => {
     setTotalOpen(result["open"][match.params.id] || 0);
     setTotalWon(result["won"][match.params.id] || 0);
     setTotalLost(result["lost"][match.params.id] || 0);
+    setPerfData({
+      labels: ['Bet', 'Won', 'Lost', 'Open'],
+      datasets: [
+        {
+          label: 'Race Dataset',
+          data: [total, totalWon, totalLost, totalOpen],
+          backgroundColor: Object.values(CHART_COLORS),
+        }
+      ]
+    })
   }, [eachWayBets]);
 
   const getRaceAndBets = async () => {
@@ -78,6 +95,7 @@ const Race = ({ match }) => {
     } finally {
       console.log("Hide loading");
       await hideLoading();
+      setIsLoading(false)
     }
   };
 
@@ -92,7 +110,7 @@ const Race = ({ match }) => {
 
     if (data) {
       console.log("Types");
-      console.log(data);
+      // console.log(data);
       let betType = {};
       data.map((d) => {
         betType[d.id] = d.type;
@@ -120,7 +138,7 @@ const Race = ({ match }) => {
 
     if (data) {
       console.log("Race data 2");
-      console.log(data);
+      // console.log(data);
       setRace(data);
     }
   };
@@ -144,13 +162,13 @@ const Race = ({ match }) => {
       console.log("Bets");
       console.log(data);
       setEachWayBets(data);
-      // let result = calculateWinnings(data);
+      let result = calculateWinnings(data);
       console.log("WINNINGS");
-      // console.log(result);
-      // setTotal(result["total"][match.params.id]);
-      // setTotalOpen(result["open"][match.params.id]);
-      // setTotalWon(result["won"][match.params.id]);
-      // setTotalLost(result["lost"][match.params.id]);
+      console.log(result);
+      setTotal(result["total"][match.params.id]);
+      setTotalOpen(result["open"][match.params.id]);
+      setTotalWon(result["won"][match.params.id]);
+      setTotalLost(result["lost"][match.params.id]);
     }
   };
 
@@ -185,8 +203,6 @@ const Race = ({ match }) => {
     }
 
     if (data) {
-      console.log("Statii");
-      console.log(data);
       setStatus(data);
     }
   };
@@ -194,11 +210,6 @@ const Race = ({ match }) => {
   const setBetStatus = async (bet, s) => {
     await showLoading();
     try {
-      console.log("BET");
-      console.log(bet);
-      console.log("Status");
-      console.log(s);
-
       let newBets = eachWayBets.map((b) => {
         if (b.id === bet.id) {
           b.status = s;
@@ -243,70 +254,22 @@ const Race = ({ match }) => {
     }
   };
 
-  function valueOrDefault(value, defaultValue) {
-    return typeof value === 'undefined' ? defaultValue : value;
-  }
+  // const DATA_COUNT = 5;
+  // const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
 
-  var _seed = Date.now();
+  // console.log("NUMBERS CONFIG")
+  // console.log(numbers(NUMBER_CFG))
 
-  function srand(seed) {
-    _seed = seed;
-  }
-
-  function rand(min, max) {
-    min = valueOrDefault(min, 0);
-    max = valueOrDefault(max, 0);
-    _seed = (_seed * 9301 + 49297) % 233280;
-    return min + (_seed / 233280) * (max - min);
-  }
-
-  const CHART_COLORS = {
-    red: 'rgb(255, 99, 132)',
-    orange: 'rgb(255, 159, 64)',
-    yellow: 'rgb(255, 205, 86)',
-    green: 'rgb(75, 192, 192)',
-    blue: 'rgb(54, 162, 235)',
-    purple: 'rgb(153, 102, 255)',
-    grey: 'rgb(201, 203, 207)'
-  };
-
-  function numbers(config) {
-    var cfg = config || {};
-    var min = valueOrDefault(cfg.min, 0);
-    var max = valueOrDefault(cfg.max, 100);
-    var from = valueOrDefault(cfg.from, []);
-    var count = valueOrDefault(cfg.count, 8);
-    var decimals = valueOrDefault(cfg.decimals, 8);
-    var continuity = valueOrDefault(cfg.continuity, 1);
-    var dfactor = Math.pow(10, decimals) || 0;
-    var data = [];
-    var i, value;
-  
-    for (i = 0; i < count; ++i) {
-      value = (from[i] || 0) + rand(min, max);
-      if (rand() <= continuity) {
-        data.push(Math.round(dfactor * value) / dfactor);
-      } else {
-        data.push(null);
-      }
-    }
-  
-    return data;
-  }
-
-  const DATA_COUNT = 5;
-  const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
-
-  const data = {
-    labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
-    datasets: [
-      {
-        label: 'Dataset 1',
-        data: numbers(NUMBER_CFG),
-        backgroundColor: Object.values(CHART_COLORS),
-      }
-    ]
-  };
+  // const data = {
+  //   labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+  //   datasets: [
+  //     {
+  //       label: 'Dataset 1',
+  //       data: numbers(NUMBER_CFG),
+  //       backgroundColor: Object.values(CHART_COLORS),
+  //     }
+  //   ]
+  // };
 
   return (
     <>
@@ -320,24 +283,49 @@ const Race = ({ match }) => {
         <div className="pt-8 pb-16">
           <div className="flex items-center flex-col flex-wrap justify-center mb-8 text-center">
             <div className="block">
-              <Doughnut data={data} />
+              { !isLoading && perfData != null && <Doughnut data={perfData} redraw={true}/> }
             </div>
-            <IonText className="block">
-              <h1 className="text-xl font-bold mb-2">
-                Net: {currencyFormatter.format(totalWon - total)}
-              </h1>
-              <h2 className="text-lg mb-2">
-                Total Bet: {currencyFormatter.format(total)}
-              </h2>
-              <h2 className="text-lg mt-2">
-                Total Won: {currencyFormatter.format(totalWon)}
-              </h2>
-              <h2 className="text-lg mt-0.5">
-                Total Lost: {currencyFormatter.format(totalLost)}
-              </h2>
-              <h2 className="text-lg mt-0.5">
-                Total Open: {currencyFormatter.format(totalOpen)}
-              </h2>
+            <IonText className="grid grid-cols-3 gap-x-16 gap-y-2 mt-4">
+              <div className="flex items-start flex-col">
+                <div className="text-md mb-1 text-slate-500">
+                  Net
+                </div>
+                <div className="text-xl font-bold text-slate-700">
+                  {currencyFormatter.format(totalWon - totalLost)}
+                </div>
+              </div>
+              <div className="flex items-start flex-col">
+                <div className="text-md mb-1 text-slate-500">
+                  Total
+                </div>
+                <div className="text-xl font-bold text-slate-700">
+                  {currencyFormatter.format(total)}
+                </div>
+              </div>
+              <div className="flex items-start flex-col">
+                <div className="text-md mb-1 text-slate-500">
+                  Won
+                </div>
+                <div className="text-xl font-bold text-slate-700">
+                  {currencyFormatter.format(totalWon)}
+                </div>
+              </div>
+              <div className="flex items-start flex-col">
+                <div className="text-md mb-1 text-slate-500">
+                  Lost
+                </div>
+                <div className="text-xl font-bold text-slate-700">
+                  {currencyFormatter.format(totalLost)}
+                </div>
+              </div>
+              <div className="flex items-start flex-col">
+                <div className="text-md mb-1 text-slate-500">
+                  Open
+                </div>
+                <div className="text-xl font-bold text-slate-700">
+                  {currencyFormatter.format(totalOpen)}
+                </div>
+              </div>
             </IonText>
             <div className="block mt-6 w-[90%] text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
               <ul className="flex flex-wrap -mb-px items-center w-full block justify-center">
@@ -365,8 +353,6 @@ const Race = ({ match }) => {
                   return
                 }
 
-                console.log("Rider name");
-                console.log(kebabCase(ew?.rider_name));
                 let image = `https://www.procyclingstats.com/${
                   ridersInfo[kebabCase(ew?.rider_name)]?.image_url
                 }`;
@@ -432,8 +418,6 @@ const Race = ({ match }) => {
                           onIonChange={(e) => setBetStatus(ew, e.detail.value)}
                         >
                           {betStatus.map((bs) => {
-                            console.log("bt");
-                            console.log(bs);
                             return (
                               <IonSelectOption key={bs?.id} value={bs?.id}>
                                 {capitalizeFirstLetter(bs?.status)}

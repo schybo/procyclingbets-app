@@ -55,7 +55,26 @@ const Race = ({ match }) => {
   const [eachWayBets, setEachWayBets] = useState([]);
   const [viewState, setViewState] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
-  const [perfData, setPerfData] = useState(null)
+
+  const labels = ['Won', 'Lost', 'Open']
+  const bgColors = [
+    '#36d399',
+    '#f87272',
+    '#E6E6E6'
+  ]
+
+  // TODO Colors
+  const [perfData, setPerfData] = useState({
+    labels: labels,
+    datasets: [
+      {
+        label: 'Race Dataset',
+        data: [0, 0, 0],
+        backgroundColor: bgColors
+        // backgroundColor: Object.values(CHART_COLORS),
+      }
+    ]
+  })
 
   useEffect(() => {
     getRaceAndBets();
@@ -68,13 +87,14 @@ const Race = ({ match }) => {
     setTotalOpen(result["open"][match.params.id] || 0);
     setTotalWon(result["won"][match.params.id] || 0);
     setTotalLost(result["lost"][match.params.id] || 0);
+    console.log([total, totalWon, totalLost, totalOpen])
     setPerfData({
-      labels: ['Bet', 'Won', 'Lost', 'Open'],
+      labels: labels,
       datasets: [
         {
           label: 'Race Dataset',
-          data: [total, totalWon, totalLost, totalOpen],
-          backgroundColor: Object.values(CHART_COLORS),
+          data: [totalWon, totalLost, totalOpen],
+          backgroundColor: bgColors,
         }
       ]
     })
@@ -283,14 +303,16 @@ const Race = ({ match }) => {
         <div className="pt-8 pb-16">
           <div className="flex items-center flex-col flex-wrap justify-center mb-8 text-center">
             <div className="block">
-              { !isLoading && perfData != null && <Doughnut data={perfData} redraw={true}/> }
+              <Doughnut key={total} data={perfData} redraw={true}/>
             </div>
             <IonText className="grid grid-cols-3 gap-x-16 gap-y-2 mt-4">
               <div className="flex items-start flex-col">
                 <div className="text-md mb-1 text-slate-500">
                   Net
                 </div>
-                <div className="text-xl font-bold text-slate-700">
+                <div className={`text-xl font-bold ${
+                    totalWon - totalLost > 0 ? "text-green-600" : "text-red-600"
+                }`}>
                   {currencyFormatter.format(totalWon - totalLost)}
                 </div>
               </div>

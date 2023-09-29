@@ -133,25 +133,87 @@ const DashboardPage = () => {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              <div className="text-md block text-center w-full">
-                <div className="mb-4">
-                  Net: {currencyFormatter.format(totalWon - total)}
+              <>
+                <IonText className="grid grid-cols-3 gap-x-16 gap-y-2 mt-4">
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Net
+                    </div>
+                    <div className={`text-xl font-bold ${
+                        totalWon - totalLost > 0 ? "text-green-600" : "text-red-600"
+                    }`}>
+                      {currencyFormatter.format(totalWon - totalLost)}
+                    </div>
+                  </div>
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Total
+                    </div>
+                    <div className="text-xl font-bold text-slate-700">
+                      {currencyFormatter.format(total)}
+                    </div>
+                  </div>
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Won
+                    </div>
+                    <div className="text-xl font-bold text-slate-700">
+                      {currencyFormatter.format(totalWon)}
+                    </div>
+                  </div>
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Lost
+                    </div>
+                    <div className="text-xl font-bold text-slate-700">
+                      {currencyFormatter.format(totalLost)}
+                    </div>
+                  </div>
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Open
+                    </div>
+                    <div className="text-xl font-bold text-slate-700">
+                      {currencyFormatter.format(totalOpen)}
+                    </div>
+                  </div>
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Wins
+                    </div>
+                    <div className="text-xl font-bold text-slate-700">
+                      {wins}
+                    </div>
+                  </div>
+                  <div className="flex items-start flex-col">
+                    <div className="text-md mb-1 text-slate-500">
+                      Win Percentage
+                    </div>
+                    <div className="text-xl font-bold text-slate-700">
+                      {winPercentage}
+                    </div>
+                  </div>
+                </IonText>
+                <div className="text-md block text-center w-full">
+                  <div className="mb-4">
+                    Net: {currencyFormatter.format(totalWon - totalLost)}
+                  </div>
+                  <div className="mb-4">
+                    Total Bet: {currencyFormatter.format(total)}
+                  </div>
+                  <div className="mb-4">
+                    Total Won: {currencyFormatter.format(totalWon)}
+                  </div>
+                  <div className="mb-4">
+                    Total Lost: {currencyFormatter.format(totalLost)}
+                  </div>
+                  <div className="mb-4">
+                    Total Open: {currencyFormatter.format(totalOpen)}
+                  </div>
+                  <div className="mb-4">Wins: {wins}</div>
+                  <div className="mb-4">Win Percentage: {winPercentage}%</div>
                 </div>
-                <div className="mb-4">
-                  Total Bet: {currencyFormatter.format(total)}
-                </div>
-                <div className="mb-4">
-                  Total Won: {currencyFormatter.format(totalWon)}
-                </div>
-                <div className="mb-4">
-                  Total Lost: {currencyFormatter.format(totalLost)}
-                </div>
-                <div className="mb-4">
-                  Total Open: {currencyFormatter.format(totalOpen)}
-                </div>
-                <div className="mb-4">Wins: {wins}</div>
-                <div className="mb-4">Win Percentage: {winPercentage}%</div>
-              </div>
+              </>
             )}
           </div>  
         </div>

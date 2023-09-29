@@ -1,15 +1,9 @@
 import React from "react";
 import {
-  IonList,
   IonCard,
-  IonHeader,
-  IonContent,
-  IonToolbar,
-  IonTitle,
-  IonButton,
+  IonText,
   useIonRouter,
 } from "@ionic/react";
-import { IonInput, IonItem, IonLabel } from "@ionic/react";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
@@ -210,9 +204,9 @@ const ViewRaces = ({viewState}) => {
                 <IonCard
                   color="light"
                   key={`race-${r?.id}`}
-                  className="w-full md:w-64 h-60 mx-6 flex flex-row items-center text-ellipsis bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl">
+                  className="w-full md:w-64 h-64 mx-6 flex flex-row items-center text-ellipsis bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl">
                   <div className="flex flex-col justify-between px-4 leading-normal w-full">
-                    <div className="header flex justify-between">
+                    <div className="header flex justify-between px-4">
                       <div className="text-lg font-bold truncate">
                         <a href={`/race/view/${r.id}`}>
                           <div className="flex flex-row items-center mb-2">
@@ -227,31 +221,50 @@ const ViewRaces = ({viewState}) => {
                         <Dropdown race={r} deleteRace={deleteRace} archiveToggle={archiveToggle}></Dropdown>
                       </div>
                     </div>
-                    <div>
-                      <span
-                        className={`font-bold ${
+                    <IonText className="grid grid-cols-3 gap-x-8 gap-y-1 mt-1 px-4">
+                      <div className="flex items-start flex-col">
+                        <div className="text-md mb-0.5 text-slate-500">
+                          Net
+                        </div>
+                        <div className={`text-xl font-bold ${
                           net > 0 ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        Total Net: {currencyFormatter.format(net)}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-bold">Total Bet: </span>
-                      {currencyFormatter.format(total[r?.id])}
-                    </div>
-                    <div>
-                      <span className="font-bold">Total Won: </span>
-                      {currencyFormatter.format(totalWon[r?.id])}
-                    </div>
-                    <div>
-                      <span className="font-bold">Total Lost: </span>
-                      {currencyFormatter.format(totalLost[r?.id])}
-                    </div>
-                    <div>
-                      <span className="font-bold">Total Open: </span>
-                      {currencyFormatter.format(totalOpen[r?.id])}
-                    </div>
+                        }`}>
+                          {currencyFormatter.format(net)}
+                        </div>
+                      </div>
+                      <div className="flex items-start flex-col">
+                        <div className="text-md mb-0.5 text-slate-500">
+                          Total
+                        </div>
+                        <div className="text-xl font-bold text-slate-700">
+                          {currencyFormatter.format(total[r?.id])}
+                        </div>
+                      </div>
+                      <div className="flex items-start flex-col">
+                        <div className="text-md mb-0.5 text-slate-500">
+                          Won
+                        </div>
+                        <div className="text-xl font-bold text-slate-700">
+                          {currencyFormatter.format(totalWon[r?.id])}
+                        </div>
+                      </div>
+                      <div className="flex items-start flex-col">
+                        <div className="text-md mb-0.5 text-slate-500">
+                          Lost
+                        </div>
+                        <div className="text-xl font-bold text-slate-700">
+                          {currencyFormatter.format(totalLost[r?.id])}
+                        </div>
+                      </div>
+                      <div className="flex items-start flex-col">
+                        <div className="text-md mb-0.5 text-slate-500">
+                          Open
+                        </div>
+                        <div className="text-xl font-bold text-slate-700">
+                          {currencyFormatter.format(totalOpen[r?.id])}
+                        </div>
+                      </div>
+                    </IonText>
                     <hr className="mt-4"></hr>
                     <button
                       onClick={() =>

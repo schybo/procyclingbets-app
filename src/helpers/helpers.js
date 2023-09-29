@@ -127,8 +127,6 @@ export const calculateWinnings = (bets) => {
   });
 
   bets.map((bet) => {
-    console.log("BET STATUS")
-    console.log(bet)
     if (!bet.synthetic) {
       t[bet.race_id] += bet.amount;
       if (countEachWay(bet)) {
@@ -176,15 +174,12 @@ export const calculateWinnings = (bets) => {
   });
 
   for (const [key, value] of Object.entries(to)) {
-    console.log("HERE YO");
     to[key] = round(to[key], 2);
     tw[key] = round(tw[key], 2);
     t[key] = round(t[key], 2);
     tl[key] = round(tl[key], 2);
   }
 
-  console.log("TOTAL WON");
-  console.log(tw);
   return {
     won: tw,
     lost: tl,

@@ -1,9 +1,11 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IonText } from "@ionic/react";
 import { supabase } from "../supabaseClient";
 import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
 import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 import {
   capitalizeFirstLetter,
   calculateWinnings,
@@ -12,6 +14,8 @@ import {
 } from "../helpers/helpers";
 import { CurrencyDollarIcon } from "@heroicons/react/20/solid";
 
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 const DashboardPage = () => {
   // const [showLoading, hideLoading] = useIonLoading();
   const [loading, setLoading] = useState(true);
@@ -19,9 +23,28 @@ const DashboardPage = () => {
   const [session] = useState(() => supabase.auth.getSession());
   const [eachWayBets, setEachWayBets] = useState([]);
   const [total, setTotal] = useState();
-  const [totalWon, setTotalWon] = useState();
-  const [totalLost, setTotalLost] = useState();
-  const [totalOpen, setTotalOpen] = useState();
+  const [totalWon, setTotalWon] = useState(0);
+  const [totalLost, setTotalLost] = useState(0);
+  const [totalOpen, setTotalOpen] = useState(0);
+  const [perfData, setPerfData] = useState()
+  const [isLoading, setIsLoading] = useState(true)
+
+  const labels = ['Won', 'Lost', 'Open']
+  const bgColors = [
+    '#36d399',
+    '#f87272',
+    '#E6E6E6'
+  ]
+  const borderColors = [
+    '#28b983',
+    '#f53e3e',
+    '#c3c3c3',
+  ]
+
+  const options = {
+    radius: '85%',
+    responsive: true,
+  };
 
   useEffect(() => {
     getBets();
@@ -48,6 +71,20 @@ const DashboardPage = () => {
     setTotalOpen(calcTotalOpen);
     setTotalWon(calcTotalWon);
     setTotalLost(calcTotalLost);
+    setPerfData({
+      labels: labels,
+      datasets: [
+        {
+          label: 'Race Dataset',
+          data: [calcTotalWon, calcTotalLost, calcTotalOpen],
+          backgroundColor: bgColors,
+          borderColor: borderColors,
+          borderWidth: 1
+        }
+      ]
+    })
+    console.log(perfData)
+    setIsLoading(false)
   }, [eachWayBets]);
 
   const getBets = async () => {
@@ -106,8 +143,8 @@ const DashboardPage = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="pt-8 pb-20">
-          <div className="mt-20 mb-32 w-full flex flex-row flex-wrap items-center justify-center">
+        <div className="pt-8 pb-4">
+          <div className="mb-32 w-full flex flex-row flex-wrap items-center justify-center">
             <img src="assets/svgs/cycling-colored.svg" className="h-16 mb-4"></img>
             <div className="w-full text-xl font-bold block text-center mb-8">
               Betting Performance
@@ -133,8 +170,11 @@ const DashboardPage = () => {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              <>
-                <IonText className="grid grid-cols-3 gap-x-16 gap-y-2 mt-4">
+              <div className="flex items-center flex-col flex-wrap justify-center">
+                <div className="block">
+                  { !isLoading && <Doughnut data={perfData} options={options} redraw={true}/> }
+                </div>
+                <IonText className="grid grid-cols-3 gap-x-4 gap-y-2 mt-4 w-[90%]">
                   <div className="flex items-start flex-col">
                     <div className="text-md mb-1 text-slate-500">
                       Net
@@ -194,26 +234,7 @@ const DashboardPage = () => {
                     </div>
                   </div>
                 </IonText>
-                <div className="text-md block text-center w-full">
-                  <div className="mb-4">
-                    Net: {currencyFormatter.format(totalWon - totalLost)}
-                  </div>
-                  <div className="mb-4">
-                    Total Bet: {currencyFormatter.format(total)}
-                  </div>
-                  <div className="mb-4">
-                    Total Won: {currencyFormatter.format(totalWon)}
-                  </div>
-                  <div className="mb-4">
-                    Total Lost: {currencyFormatter.format(totalLost)}
-                  </div>
-                  <div className="mb-4">
-                    Total Open: {currencyFormatter.format(totalOpen)}
-                  </div>
-                  <div className="mb-4">Wins: {wins}</div>
-                  <div className="mb-4">Win Percentage: {winPercentage}%</div>
-                </div>
-              </>
+              </div>
             )}
           </div>  
         </div>

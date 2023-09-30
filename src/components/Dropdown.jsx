@@ -9,8 +9,6 @@ function classNames(...classes) {
 
 export default function Dropdown({ race, deleteRace, archiveToggle }) {
     const router = useIonRouter();
-    console.log("RACE")
-    console.log(race)
 
     return (
         <Menu as="div" className="relative inline-block text-left">

@@ -8,7 +8,8 @@ import {
   IonSelectOption,
   useIonRouter,
 } from "@ionic/react";
-import { IonNav, useIonLoading, useIonToast } from "@ionic/react";
+import { IonNav, useIonLoading, useIonToast, IonButtons, IonBackButton } from "@ionic/react";
+import { caretBack } from 'ionicons/icons';
 import {
   IonCard,
 } from "@ionic/react";
@@ -62,6 +63,17 @@ const Race = ({ match }) => {
     '#f87272',
     '#E6E6E6'
   ]
+  const borderColors = [
+    '#28b983',
+    '#f53e3e',
+    '#c3c3c3',
+  ]
+
+  const options = {
+    radius: '85%',
+    responsive: true,
+  };
+
 
   // TODO Colors
   const [perfData, setPerfData] = useState({
@@ -87,17 +99,23 @@ const Race = ({ match }) => {
     setTotalOpen(result["open"][match.params.id] || 0);
     setTotalWon(result["won"][match.params.id] || 0);
     setTotalLost(result["lost"][match.params.id] || 0);
-    console.log([total, totalWon, totalLost, totalOpen])
     setPerfData({
       labels: labels,
       datasets: [
         {
           label: 'Race Dataset',
-          data: [totalWon, totalLost, totalOpen],
+          data: [
+            result["won"][match.params.id],
+            result["lost"][match.params.id],
+            result["open"][match.params.id]
+          ],
           backgroundColor: bgColors,
+          borderColor: borderColors,
+          borderWidth: 1,
         }
       ]
     })
+    setIsLoading(false)
   }, [eachWayBets]);
 
   const getRaceAndBets = async () => {
@@ -115,7 +133,6 @@ const Race = ({ match }) => {
     } finally {
       console.log("Hide loading");
       await hideLoading();
-      setIsLoading(false)
     }
   };
 
@@ -246,6 +263,9 @@ const Race = ({ match }) => {
       if (error && status !== 406) {
         throw error;
       }
+
+      // Refresh the list of bets
+      await getEachWayBets();
     } catch (error) {
       showToast({ message: error.message, duration: 5000 });
     } finally {
@@ -293,17 +313,22 @@ const Race = ({ match }) => {
 
   return (
     <>
-      <IonHeader className="flex flex-row items-center justify-center">
-        <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
+      <IonHeader>
         <IonToolbar className="inline-block">
-          <IonTitle className="mx-0 px-0 h-8">{race?.name}</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/race"></IonBackButton>
+          </IonButtons>
+          <div className="flex flex-row items-center justify-center">
+            <img className="h-8 ml-1 mr-2" src="assets/icon/iconClear.png"></img>
+            <IonTitle className="mx-0 px-0 h-8">{race?.name}</IonTitle>
+          </div>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <div className="pt-8 pb-16">
           <div className="flex items-center flex-col flex-wrap justify-center mb-8 text-center">
             <div className="block">
-              <Doughnut key={total} data={perfData} redraw={true}/>
+              { !isLoading && <Doughnut data={perfData} options={options} redraw={true}/> }
             </div>
             <IonText className="grid grid-cols-3 gap-x-16 gap-y-2 mt-4">
               <div className="flex items-start flex-col">

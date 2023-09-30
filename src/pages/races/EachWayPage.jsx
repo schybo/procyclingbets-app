@@ -153,10 +153,17 @@ const EachWay = ({ match }) => {
 
   return (
     <>
-      <IonHeader className="flex flex-row items-center justify-center">
-        <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
+      <IonHeader>
         <IonToolbar className="inline-block">
-          <IonTitle className="mx-0 px-0 h-8">Add Bet</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref={`/race/view/${match.params.id}`}></IonBackButton>
+          </IonButtons>
+          <div className="flex flex-row items-center justify-center">
+            <img className="h-8 ml-1 mr-2" src="assets/icon/iconClear.png"></img>
+            <IonToolbar className="inline-block">
+              <IonTitle className="mx-0 px-0 h-8">Add Bet</IonTitle>
+            </IonToolbar>
+          </div>
         </IonToolbar>
       </IonHeader>
       <IonContent>

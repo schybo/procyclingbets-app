@@ -153,7 +153,7 @@ const EachWay = ({ match }) => {
 
   return (
     <>
-      <IonHeader>
+      <IonHeader className="h-[57px]">
         <IonToolbar className="inline-block">
           <IonButtons slot="start">
             <IonBackButton defaultHref={`/race/view/${match.params.id}`}></IonBackButton>

@@ -65,13 +65,18 @@ const CreateRace = () => {
   });
   return (
     <>
-      <IonHeader className="flex flex-row items-center justify-center">
-        <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
+      <IonHeader className="flex flex-row items-center justify-center h-[57px]">
         <IonToolbar className="inline-block">
           <IonButtons slot="start">
-            <IonBackButton></IonBackButton>
+            <IonBackButton defaultHref="/race"></IonBackButton>
           </IonButtons>
-          <IonTitle className="mx-0 px-0 h-8">Create Race</IonTitle>
+          <div className="flex flex-row items-center justify-center">
+            <img
+              className="h-8 ml-1 mr-2"
+              src="assets/icon/iconClear.png"
+            ></img>
+            <IonTitle className="mx-0 px-0 h-8">Create Race</IonTitle>
+          </div>
         </IonToolbar>
       </IonHeader>
       <IonContent class="ion-padding">

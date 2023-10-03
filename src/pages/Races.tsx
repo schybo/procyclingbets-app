@@ -25,7 +25,7 @@ const Races = () => {
 
   return (
     <>
-      <IonHeader className="flex flex-row items-center justify-center">
+      <IonHeader className="flex flex-row items-center justify-center h-[57px]">
         <img className="h-8 ml-6 mr-2" src="assets/icon/iconClear.png"></img>
         <IonToolbar className="inline-block">
           <IonTitle className="mx-0 px-0 h-8">Races</IonTitle>

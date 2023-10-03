@@ -8,7 +8,7 @@ import { createCanvas, loadImage } from "canvas";
 // www.npmjs.com/package/crawlee
 
 // Function to convert canvas to base64
-https: function canvasToBase64(canvas) {
+function canvasToBase64(canvas) {
   return canvas.toDataURL().split(",")[1];
 }
 
@@ -22,18 +22,24 @@ async function scrapeStageMap(stageNumber) {
       const cv = $("#altitudeCanvas");
       if (cv.length > 0) {
         const canvas = cv[0];
+        document.getElementById('altitudeCanvas');
 
         // Get the width and height of the canvas
         const width = $(canvas).attr("width");
         const height = $(canvas).attr("height");
+        console.log("WIdth", width)
+        console.log("Height", height)
 
         // Create a new canvas using the same dimensions
         const newCanvas = createCanvas(width, height);
         const ctx = newCanvas.getContext("2d");
 
         // Load the image data from the canvas element
-        console.log(canvas.html().toDataURL());
-        const imageData = $(canvas).get(0).toDataURL();
+        // console.log(canvas.html().toDataURL());
+        const dataUrl = $(canvas).attr('data-canvas');
+        console.log(dataUrl)
+        console.log(canvas)
+        const imageData = $(canvas).toDataURL();
 
         // Load the image data onto the new canvas
         const image = await loadImage(imageData);
@@ -54,7 +60,7 @@ async function scrapeStageMap(stageNumber) {
   }
 }
 
-const stageNumber = 519792;
+const stageNumber = 546563;
 scrapeStageMap(stageNumber).then((stageMap) => {
   if (stageMap) {
     console.log(`Map for Stage ${stageNumber} of the Tour de France:`);

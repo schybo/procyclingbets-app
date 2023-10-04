@@ -66,6 +66,7 @@
     "build:css": "postcss tailwind.css -o src/theme/tailwind.css",
     "watch:css": "postcss tailwind.css -o src/theme/tailwind.css -w",
     "start:dev:ios": "yarn watch:css & ionic capacitor run ios -l --external",
+    "start:dev:android": "yarn watch:css & ionic capacitor run android -l --external",
     "start:dev": "yarn watch:css & ionic serve",
     "release:android": "cd android && ./gradlew bundleRelease && cd app/build/outputs/bundle/release && jarsigner -keystore /Users/brentscheibelhut/procyclingbets-app/pcb.keystore app-release.aab pcb && cp app-release.aab /Users/brentscheibelhut/procyclingbets-app/releases/"
   },
